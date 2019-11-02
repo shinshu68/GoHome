@@ -1,0 +1,21 @@
+[[repo]]
+path = '~/dotfiles'
+
+[repo.pre]
+pull = true
+
+[repo.post]
+branch = 'master'
+commit = true
+push = true
+
+[[repo]]
+path = '~/shinshu_works'
+
+[repo.pre]
+pull = true
+
+[repo.post]
+branch = 'master'
+commit = true
+push = true
