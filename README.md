@@ -1,2 +1,3 @@
-# GoHome
-帰るときにgit pushとかを忘れないようにするためのコマンド
+# PrePost
+来たときのgit clone  
+帰るときのgit pushとかを忘れないようにするためのコマンド
