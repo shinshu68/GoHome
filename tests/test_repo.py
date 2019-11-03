@@ -31,6 +31,15 @@ class TestRepo(unittest.TestCase):
         self.assertEqual(r._pre, self.pre)
         self.assertEqual(r._post, self.post)
 
+    def test_repo_str(self):
+        r = repo(self.path, self.pre, self.post)
+        d = {
+            'path': self.path,
+            'pre': self.pre,
+            'post': self.post
+        }
+        self.assertEqual(str(r), str(d))
+
 
 if __name__ == '__main__':
     unittest.main()
