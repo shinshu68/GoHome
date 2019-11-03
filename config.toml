@@ -3,21 +3,19 @@ path = '~/dotfiles'
 
 [repo.pre]
 branch = 'master'
-pull = true
+check = ['pull']
 
 [repo.post]
 branch = 'master'
-commit = true
-push = true
+check = ['commit', 'push']
 
 [[repo]]
 path = '~/shinshu_works'
 
 [repo.pre]
 branch = 'master'
-pull = true
+check = ['pull']
 
 [repo.post]
 branch = 'master'
-commit = true
-push = true
+check = ['commit', 'push']
