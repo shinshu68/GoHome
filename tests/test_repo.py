@@ -64,6 +64,22 @@ class TestRepo(unittest.TestCase):
         r = repo(self.path, pre={'branch': 'master', 'check': ['pull']})
         r.pre()
 
+    def test_post(self):
+        r = repo(self.path, pre={})
+        with self.assertRaises(ValueError):
+            r.pre()
+
+        r = repo(self.path, post={'branch': 'master'})
+        with self.assertRaises(ValueError):
+            r.post()
+
+        r = repo(self.path, post={'branch': 'master', 'check': []})
+        with self.assertRaises(ValueError):
+            r.post()
+
+        r = repo(self.path, post={'branch': 'master', 'check': ['push']})
+        r.post()
+
 
 if __name__ == '__main__':
     unittest.main()
