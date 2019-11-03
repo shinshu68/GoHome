@@ -80,15 +80,15 @@ class TestRepo(unittest.TestCase):
         r = repo(self.path, post={'branch': 'master', 'check': ['push']})
         r.post()
 
-    def test_is_inside_git_dir(self):
+    def test_is_inside_work_tree(self):
         r = repo(self.path)
-        self.assertTrue(r.is_inside_git_dir())
+        self.assertTrue(r.is_inside_work_tree())
 
         r = repo(self.path + '/config')
-        self.assertTrue(r.is_inside_git_dir())
+        self.assertTrue(r.is_inside_work_tree())
 
         r = repo('~/')
-        self.assertFalse(r.is_inside_git_dir())
+        self.assertFalse(r.is_inside_work_tree())
 
 
 if __name__ == '__main__':
