@@ -81,14 +81,18 @@ class TestRepo(unittest.TestCase):
         r.post()
 
     def test_is_inside_work_tree(self):
-        r = repo(self.path)
-        self.assertTrue(r.is_inside_work_tree())
+        path = self.path
+        r = repo(path)
+        self.assertTrue(r.is_inside_work_tree(path))
 
-        r = repo(self.path + '/config')
-        self.assertTrue(r.is_inside_work_tree())
+    def test_is_valid_path(self):
+        path = self.path
+        r = repo(path)
 
-        r = repo('~/')
-        self.assertFalse(r.is_inside_work_tree())
+        path = '~/'
+        with self.assertRaises(ValueError):
+            r = repo(path)
+            r.is_inside_work_tree(path)
 
 
 if __name__ == '__main__':
