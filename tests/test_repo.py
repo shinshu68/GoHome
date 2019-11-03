@@ -4,7 +4,7 @@ from repo import repo
 
 class TestRepo(unittest.TestCase):
     def setUp(self):
-        self.path = '~/prepost'
+        self.path = '/home/shinshu/prepost'
         self.pre = {'pull': True}
         self.post = {'push': True}
 
@@ -47,6 +47,22 @@ class TestRepo(unittest.TestCase):
     def test_get_post(self):
         r = repo(self.path, self.pre, self.post)
         self.assertDictEqual(self.post, r.get_post())
+
+    def test_pre(self):
+        r = repo(self.path, pre={})
+        with self.assertRaises(ValueError):
+            r.pre()
+
+        r = repo(self.path, pre={'branch': 'master'})
+        with self.assertRaises(ValueError):
+            r.pre()
+
+        r = repo(self.path, pre={'branch': 'master', 'check': []})
+        with self.assertRaises(ValueError):
+            r.pre()
+
+        r = repo(self.path, pre={'branch': 'master', 'check': ['pull']})
+        r.pre()
 
 
 if __name__ == '__main__':
