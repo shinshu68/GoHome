@@ -1,33 +1,9 @@
-from pathlib import Path
 import json
 import os
+import repo as Repo
 import subprocess
 import sys
 import toml
-
-
-class Repo():
-    def __init__(self, path, pre=None, post=None):
-        self.path = path
-        self._pre = pre
-        self._post = post
-
-    def __str__(self):
-        return str({
-            'path': self.path,
-            'pre': self.pre,
-            'post': self.post
-        })
-
-    def pre(self):
-        os.chdir(Path(self.path).expanduser())
-        print(os.getcwd())
-        print(self.path, self._pre)
-
-    def post(self):
-        os.chdir(Path(self.path).expanduser())
-        print(os.getcwd())
-        print(self.path, self._post)
 
 
 def get_config_file_path():
@@ -60,7 +36,7 @@ def main(mode='pre'):
 
     repo_list = []
     for repo in config.get('repo'):
-        repo_list.append(Repo(repo.get('path'), repo.get('pre'), repo.get('post')))
+        repo_list.append(Repo.repo(repo.get('path'), repo.get('pre'), repo.get('post')))
 
     for repo in repo_list:
         if mode == 'pre':
