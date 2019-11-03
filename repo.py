@@ -50,9 +50,9 @@ class repo():
         # print(os.getcwd())
 
         pre = self.get_pre()
-        if 'branch' not in pre:
-            raise ValueError
         if 'check' not in pre or len(pre['check']) == 0:
+            raise ValueError
+        if 'remote' not in pre:
             raise ValueError
 
     def post(self):
@@ -63,7 +63,7 @@ class repo():
         # print(os.getcwd())
 
         post = self.get_post()
-        if 'branch' not in post:
-            raise ValueError
         if 'check' not in post or len(post['check']) == 0:
+            raise ValueError
+        if 'remote' not in post:
             raise ValueError
