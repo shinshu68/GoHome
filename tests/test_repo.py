@@ -46,7 +46,7 @@ class TestRepo(unittest.TestCase):
 
     def test_get_post(self):
         r = repo(self.path, self.pre, self.post)
-        self.assertDictEqual(self.pre, r.get_post())
+        self.assertDictEqual(self.post, r.get_post())
 
 
 if __name__ == '__main__':
