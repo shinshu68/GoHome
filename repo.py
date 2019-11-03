@@ -15,6 +15,12 @@ class repo():
             'post': self._post
         })
 
+    def get_pre(self):
+        return self._pre
+
+    def get_post(self):
+        return self._post
+
     def pre(self):
         os.chdir(Path(self.path).expanduser())
         print(os.getcwd())
