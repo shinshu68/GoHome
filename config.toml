@@ -2,6 +2,7 @@
 path = '~/dotfiles'
 
 [repo.pre]
+branch = 'master'
 pull = true
 
 [repo.post]
@@ -13,6 +14,7 @@ push = true
 path = '~/shinshu_works'
 
 [repo.pre]
+branch = 'master'
 pull = true
 
 [repo.post]
