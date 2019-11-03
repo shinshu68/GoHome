@@ -4,7 +4,7 @@ from repo import repo
 
 class TestRepo(unittest.TestCase):
     def setUp(self):
-        self.path = '/home/shinshu/prepost'
+        self.path = '/home/shinshu/dotfiles'
         self.pre = {'pull': True}
         self.post = {'push': True}
 
@@ -79,6 +79,16 @@ class TestRepo(unittest.TestCase):
 
         r = repo(self.path, post={'branch': 'master', 'check': ['push']})
         r.post()
+
+    def test_is_inside_git_dir(self):
+        r = repo(self.path)
+        self.assertTrue(r.is_inside_git_dir())
+
+        r = repo(self.path + '/config')
+        self.assertTrue(r.is_inside_git_dir())
+
+        r = repo('~/')
+        self.assertFalse(r.is_inside_git_dir())
 
 
 if __name__ == '__main__':
