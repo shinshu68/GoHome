@@ -11,8 +11,8 @@ class repo():
     def __str__(self):
         return str({
             'path': self.path,
-            'pre': self.pre,
-            'post': self.post
+            'pre': self._pre,
+            'post': self._post
         })
 
     def pre(self):
