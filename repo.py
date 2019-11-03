@@ -11,8 +11,8 @@ class repo():
     def __str__(self):
         return str({
             'path': self.path,
-            'pre': self._pre,
-            'post': self._post
+            'pre': self.get_pre(),
+            'post': self.get_post()
         })
 
     def get_pre(self):
@@ -24,9 +24,11 @@ class repo():
     def pre(self):
         os.chdir(Path(self.path).expanduser())
         print(os.getcwd())
-        print(self.path, self._pre)
+        for item in self.get_pre():
+            print(item)
 
     def post(self):
         os.chdir(Path(self.path).expanduser())
         print(os.getcwd())
-        print(self.path, self._post)
+        for item in self.get_post():
+            print(item)
