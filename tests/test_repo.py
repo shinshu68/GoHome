@@ -53,15 +53,18 @@ class TestRepo(unittest.TestCase):
         with self.assertRaises(ValueError):
             r.pre()
 
-        r = repo(self.path, pre={'branch': 'master'})
+        d = {'remote': {'branch': 'master', 'name': 'origin'}}
+        r = repo(self.path, pre=d)
         with self.assertRaises(ValueError):
             r.pre()
 
-        r = repo(self.path, pre={'branch': 'master', 'check': []})
+        d['check'] = []
+        r = repo(self.path, pre=d)
         with self.assertRaises(ValueError):
             r.pre()
 
-        r = repo(self.path, pre={'branch': 'master', 'check': ['pull']})
+        d['check'] = ['pull']
+        r = repo(self.path, pre=d)
         r.pre()
 
     def test_post(self):
@@ -69,15 +72,18 @@ class TestRepo(unittest.TestCase):
         with self.assertRaises(ValueError):
             r.pre()
 
-        r = repo(self.path, post={'branch': 'master'})
+        d = {'remote': {'branch': 'master', 'name': 'origin'}}
+        r = repo(self.path, post=d)
         with self.assertRaises(ValueError):
             r.post()
 
-        r = repo(self.path, post={'branch': 'master', 'check': []})
+        d['check'] = []
+        r = repo(self.path, post=d)
         with self.assertRaises(ValueError):
             r.post()
 
-        r = repo(self.path, post={'branch': 'master', 'check': ['push']})
+        d['check'] = ['push']
+        r = repo(self.path, post=d)
         r.post()
 
     def test_is_inside_work_tree(self):
