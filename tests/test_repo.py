@@ -40,6 +40,14 @@ class TestRepo(unittest.TestCase):
         }
         self.assertEqual(str(r), str(d))
 
+    def test_get_pre(self):
+        r = repo(self.path, self.pre, self.post)
+        self.assertDictEqual(self.pre, r.get_pre())
+
+    def test_get_post(self):
+        r = repo(self.path, self.pre, self.post)
+        self.assertDictEqual(self.pre, r.get_post())
+
 
 if __name__ == '__main__':
     unittest.main()
