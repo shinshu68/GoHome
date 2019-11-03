@@ -1,5 +1,7 @@
 from pathlib import Path
 import os
+import git
+import subprocess
 
 
 class repo():
@@ -15,6 +17,17 @@ class repo():
             'post': self.get_post()
         })
 
+    def is_inside_work_tree(self):
+        os.chdir(self.path)
+        res = subprocess.run(f'git rev-parse --is-inside-work-tree',
+                             shell=True,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE).stdout.decode('utf-8').strip()
+        if res == 'true':
+            return True
+        else:
+            return False
+
     def get_pre(self):
         return self._pre
 
@@ -25,7 +38,8 @@ class repo():
         if not os.path.exists(self.path):
             # print(self.path)
             pass
-        # os.chdir(Path(self.path).expanduser())
+        # os.chdir(self.path)
+        # print(git.Repo(self.path, search_parent_directories=True))
         # print(os.getcwd())
 
         pre = self.get_pre()
@@ -38,7 +52,7 @@ class repo():
         if not os.path.exists(self.path):
             # print(self.path)
             pass
-        # os.chdir(Path(self.path).expanduser())
+        # os.chdir(self.path)
         # print(os.getcwd())
 
         post = self.get_post()
