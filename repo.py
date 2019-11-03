@@ -6,7 +6,9 @@ import subprocess
 
 class repo():
     def __init__(self, path, pre=None, post=None):
-        self.path = str(Path(path).expanduser())
+        _path = str(Path(path).expanduser())
+        self.is_valid_path(_path)
+        self.path = _path
         self._pre = pre
         self._post = post
 
@@ -17,8 +19,13 @@ class repo():
             'post': self.get_post()
         })
 
-    def is_inside_work_tree(self):
-        os.chdir(self.path)
+    def is_valid_path(self, path):
+        if not os.path.exists(path) or not self.is_inside_work_tree(path):
+            raise ValueError
+        return True
+
+    def is_inside_work_tree(self, path):
+        os.chdir(path)
         res = subprocess.run(f'git rev-parse --is-inside-work-tree',
                              shell=True,
                              stdout=subprocess.PIPE,
