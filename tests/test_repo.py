@@ -104,13 +104,13 @@ class TestRepo(unittest.TestCase):
             r = repo(path)
             r.is_valid_path(path)
 
-    def test_check_push(self):
+    def test_is_pushed(self):
         r = repo(self.path, pre=self.remote)
-        self.assertTrue(r.check_push(self.remote))
+        self.assertTrue(r.is_pushed(self.remote))
 
-    def test_check_pull(self):
+    def test_is_pulled(self):
         r = repo(self.path, pre=self.remote)
-        self.assertFalse(r.check_pull(self.remote))
+        self.assertFalse(r.is_pulled(self.remote))
 
 
 if __name__ == '__main__':
