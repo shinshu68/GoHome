@@ -3,27 +3,19 @@ path = '~/dotfiles'
 
 [repo.pre]
 check = ['pull']
-[repo.pre.remote]
-branch = 'master'
-name = 'origin'
+remote = { branch = 'master', name = 'origin' }
 
 [repo.post]
 check = ['commit', 'push']
-[repo.post.remote]
-branch = 'master'
-name = 'origin'
+remote = { branch = 'master', name = 'origin' }
 
 [[repo]]
 path = '~/shinshu_works'
 
 [repo.pre]
 check = ['pull']
-[repo.pre.remote]
-branch = 'master'
-name = 'origin'
+remote = { branch = 'master', name = 'origin' }
 
 [repo.post]
 check = ['commit', 'push']
-[repo.post.remote]
-branch = 'master'
-name = 'origin'
+remote = { branch = 'master', name = 'origin' }
