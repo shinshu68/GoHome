@@ -94,11 +94,12 @@ class TestRepo(unittest.TestCase):
     def test_is_valid_path(self):
         path = self.path
         r = repo(path)
+        self.assertTrue(r.is_valid_path(path))
 
         path = '~/'
         with self.assertRaises(ValueError):
             r = repo(path)
-            r.is_inside_work_tree(path)
+            r.is_valid_path(path)
 
 
 if __name__ == '__main__':
