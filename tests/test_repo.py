@@ -108,8 +108,9 @@ class TestRepo(unittest.TestCase):
         r = repo(self.path, pre=self.remote)
         self.assertTrue(r.check_push(self.remote))
 
-        r = repo('~/workspace/prepost', pre=self.remote)
-        self.assertFalse(r.check_push(self.remote))
+    def test_check_pull(self):
+        r = repo(self.path, pre=self.remote)
+        self.assertFalse(r.check_pull(self.remote))
 
 
 if __name__ == '__main__':
