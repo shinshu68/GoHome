@@ -5,6 +5,9 @@ import subprocess
 
 
 class repo():
+    pre_commands = ['pull']
+    post_commands = ['push', 'commit']
+
     def __init__(self, path, pre=None, post=None):
         _path = str(Path(path).expanduser())
         self.is_valid_path(_path)
@@ -50,8 +53,9 @@ class repo():
         if 'name' not in pre['remote'] or'branch' not in pre['remote']:
             raise ValueError
 
-        # self.check_push(pre)
         # for check in pre['check']:
+        #     if check in self.pre_commands:
+        #         print(check)
 
     def post(self):
         post = self.get_post()
@@ -62,13 +66,39 @@ class repo():
         if 'name' not in post['remote'] or'branch' not in post['remote']:
             raise ValueError
 
-    def check_push(self, data):
+    def is_pulled(self, data):
+        os.chdir(self.path)
+        name = data['remote']['name']
+        branch = data['remote']['branch']
+        remote_branch = name + '/' + branch
+        subprocess.run(f'git fetch {name} {branch}',
+                       shell=True,
+                       stdout=subprocess.PIPE,
+                       stderr=subprocess.PIPE)
+        res = subprocess.run(f'git diff {remote_branch}',
+                             shell=True,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+        if res.returncode != 0:
+            return True
+
+        res = res.stdout.decode('utf-8').strip()
+        if res == '':
+            return False
+        else:
+            return True
+
+    def is_pushed(self, data):
         os.chdir(self.path)
         remote_branch = data['remote']['name'] + '/' + data['remote']['branch']
         res = subprocess.run(f'git diff {remote_branch}',
                              shell=True,
                              stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE).stdout.decode('utf-8').strip()
+                             stderr=subprocess.PIPE)
+        if res.returncode != 0:
+            return False
+
+        res = res.stdout.decode('utf-8').strip()
         if res == '':
             return True
         else:
