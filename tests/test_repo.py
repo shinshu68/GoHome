@@ -49,41 +49,45 @@ class TestRepo(unittest.TestCase):
         r = repo(self.path, self.pre, self.post)
         self.assertDictEqual(self.post, r.get_post())
 
+    def test_is_valid_data(self):
+        r = repo(self.path)
+        bad_data = [
+            {},
+            {'remote': {'name': 'origin', 'branch': 'master'}, 'check': []},
+            {'remote': {}, 'check': ['pull']},
+        ]
+        for d in bad_data:
+            with self.assertRaises(ValueError):
+                r.is_valid_data(d)
+
+        ok_data = {'remote': {'name': 'origin', 'branch': 'master'}, 'check': ['push']}
+        self.assertTrue(r.is_valid_data(ok_data))
+
     def test_pre(self):
-        d = {}
-        r = repo(self.path, pre=d)
-        with self.assertRaises(ValueError):
-            r.pre()
+        bad_data = [
+            {},
+            {'remote': {'name': 'origin', 'branch': 'master'}, 'check': []},
+            {'remote': {}, 'check': ['pull']},
+        ]
+        for d in bad_data:
+            r = repo(self.path, pre=d)
+            with self.assertRaises(ValueError):
+                r.pre()
 
-        d = {'remote': {'name': 'origin', 'branch': 'master'}, 'check': []}
-        r = repo(self.path, pre=d)
-        with self.assertRaises(ValueError):
-            r.pre()
-
-        d = {'remote': {}, 'check': ['pull']}
-        r = repo(self.path, pre=d)
-        with self.assertRaises(ValueError):
-            r.pre()
-
-        d = {'remote': {'name': 'origin', 'branch': 'master'}, 'check': ['push']}
-        r = repo(self.path, pre=d)
+        ok_data = {'remote': {'name': 'origin', 'branch': 'master'}, 'check': ['push']}
+        r = repo(self.path, pre=ok_data)
         r.pre()
 
     def test_post(self):
-        d = {}
-        r = repo(self.path, post=d)
-        with self.assertRaises(ValueError):
-            r.post()
-
-        d = {'remote': {'name': 'origin', 'branch': 'master'}, 'check': []}
-        r = repo(self.path, post=d)
-        with self.assertRaises(ValueError):
-            r.post()
-
-        d = {'remote': {}, 'check': ['push']}
-        r = repo(self.path, post=d)
-        with self.assertRaises(ValueError):
-            r.post()
+        bad_data = [
+            {},
+            {'remote': {'name': 'origin', 'branch': 'master'}, 'check': []},
+            {'remote': {}, 'check': ['push']},
+        ]
+        for d in bad_data:
+            r = repo(self.path, post=d)
+            with self.assertRaises(ValueError):
+                r.post()
 
         d = {'remote': {'name': 'origin', 'branch': 'master'}, 'check': ['push']}
         r = repo(self.path, post=d)
