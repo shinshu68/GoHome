@@ -42,26 +42,18 @@ class repo():
         return self._post
 
     def pre(self):
-        if not os.path.exists(self.path):
-            # print(self.path)
-            pass
-        # os.chdir(self.path)
-        # print(git.Repo(self.path, search_parent_directories=True))
-        # print(os.getcwd())
-
         pre = self.get_pre()
         if 'check' not in pre or len(pre['check']) == 0:
             raise ValueError
         if 'remote' not in pre:
             raise ValueError
 
-    def post(self):
-        if not os.path.exists(self.path):
-            # print(self.path)
-            pass
-        # os.chdir(self.path)
-        # print(os.getcwd())
+        os.chdir(self.path)
+        repo = git.Repo(self.path, search_parent_directories=True)
+        # for check in pre['check']:
 
+
+    def post(self):
         post = self.get_post()
         if 'check' not in post or len(post['check']) == 0:
             raise ValueError
