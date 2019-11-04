@@ -27,6 +27,15 @@ class repo():
             raise ValueError
         return True
 
+    def is_valid_data(self, data):
+        if 'check' not in data or len(data['check']) == 0:
+            raise ValueError
+        if 'remote' not in data:
+            raise ValueError
+        if 'name' not in data['remote'] or'branch' not in data['remote']:
+            raise ValueError
+        return True
+
     def is_inside_work_tree(self, path):
         os.chdir(path)
         res = subprocess.run('git rev-parse --is-inside-work-tree',
@@ -46,25 +55,14 @@ class repo():
 
     def pre(self):
         pre = self.get_pre()
-        if 'check' not in pre or len(pre['check']) == 0:
-            raise ValueError
-        if 'remote' not in pre:
-            raise ValueError
-        if 'name' not in pre['remote'] or'branch' not in pre['remote']:
-            raise ValueError
-
+        self.is_valid_data(pre)
         # for check in pre['check']:
         #     if check in self.pre_commands:
         #         print(check)
 
     def post(self):
         post = self.get_post()
-        if 'check' not in post or len(post['check']) == 0:
-            raise ValueError
-        if 'remote' not in post:
-            raise ValueError
-        if 'name' not in post['remote'] or'branch' not in post['remote']:
-            raise ValueError
+        self.is_valid_data(post)
 
     def is_pulled(self, data):
         os.chdir(self.path)
