@@ -50,40 +50,42 @@ class TestRepo(unittest.TestCase):
         self.assertDictEqual(self.post, r.get_post())
 
     def test_pre(self):
-        r = repo(self.path, pre={})
-        with self.assertRaises(ValueError):
-            r.pre()
-
-        d = {'remote': {'branch': 'master', 'name': 'origin'}}
+        d = {}
         r = repo(self.path, pre=d)
         with self.assertRaises(ValueError):
             r.pre()
 
-        d['check'] = []
+        d = {'remote': {'name': 'origin', 'branch': 'master'}, 'check': []}
         r = repo(self.path, pre=d)
         with self.assertRaises(ValueError):
             r.pre()
 
-        d['check'] = ['pull']
+        d = {'remote': {}, 'check': ['pull']}
+        r = repo(self.path, pre=d)
+        with self.assertRaises(ValueError):
+            r.pre()
+
+        d = {'remote': {'name': 'origin', 'branch': 'master'}, 'check': ['push']}
         r = repo(self.path, pre=d)
         r.pre()
 
     def test_post(self):
-        r = repo(self.path, pre={})
-        with self.assertRaises(ValueError):
-            r.pre()
-
-        d = {'remote': {'branch': 'master', 'name': 'origin'}}
+        d = {}
         r = repo(self.path, post=d)
         with self.assertRaises(ValueError):
             r.post()
 
-        d['check'] = []
+        d = {'remote': {'name': 'origin', 'branch': 'master'}, 'check': []}
         r = repo(self.path, post=d)
         with self.assertRaises(ValueError):
             r.post()
 
-        d['check'] = ['push']
+        d = {'remote': {}, 'check': ['push']}
+        r = repo(self.path, post=d)
+        with self.assertRaises(ValueError):
+            r.post()
+
+        d = {'remote': {'name': 'origin', 'branch': 'master'}, 'check': ['push']}
         r = repo(self.path, post=d)
         r.post()
 
