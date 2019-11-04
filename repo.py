@@ -26,7 +26,7 @@ class repo():
 
     def is_inside_work_tree(self, path):
         os.chdir(path)
-        res = subprocess.run(f'git rev-parse --is-inside-work-tree',
+        res = subprocess.run('git rev-parse --is-inside-work-tree',
                              shell=True,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE).stdout.decode('utf-8').strip()
@@ -47,11 +47,11 @@ class repo():
             raise ValueError
         if 'remote' not in pre:
             raise ValueError
+        if 'name' not in pre['remote'] or'branch' not in pre['remote']:
+            raise ValueError
 
-        os.chdir(self.path)
-        repo = git.Repo(self.path, search_parent_directories=True)
+        # self.check_push(pre)
         # for check in pre['check']:
-
 
     def post(self):
         post = self.get_post()
@@ -59,3 +59,17 @@ class repo():
             raise ValueError
         if 'remote' not in post:
             raise ValueError
+        if 'name' not in post['remote'] or'branch' not in post['remote']:
+            raise ValueError
+
+    def check_push(self, data):
+        os.chdir(self.path)
+        remote_branch = data['remote']['name'] + '/' + data['remote']['branch']
+        res = subprocess.run(f'git diff {remote_branch}',
+                             shell=True,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE).stdout.decode('utf-8').strip()
+        if res == '':
+            return True
+        else:
+            return False
