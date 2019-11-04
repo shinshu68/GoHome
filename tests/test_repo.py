@@ -7,6 +7,7 @@ class TestRepo(unittest.TestCase):
         self.path = '/home/shinshu/dotfiles'
         self.pre = {'pull': True}
         self.post = {'push': True}
+        self.remote = {'remote': {'branch': 'master', 'name': 'origin'}}
 
     def test_repo_init(self):
         with self.assertRaises(TypeError):
@@ -100,6 +101,13 @@ class TestRepo(unittest.TestCase):
         with self.assertRaises(ValueError):
             r = repo(path)
             r.is_valid_path(path)
+
+    def test_check_push(self):
+        r = repo(self.path, pre=self.remote)
+        self.assertTrue(r.check_push())
+
+        r = repo('~/workspace/prepost', pre=self.remote)
+        self.assertFalse(r.check_push())
 
 
 if __name__ == '__main__':
