@@ -45,6 +45,27 @@ class repo():
         else:
             return False
 
+    def git_commit_distance(self, a, b):
+        os.chdir(self.get_path())
+        res = subprocess.run(f'git rev-list --count {a}...{b}',
+                             shell=True,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE).stdout.decode('utf-8').strip()
+        res = int(res)
+        if res == 0:
+            return 0
+
+        lr = subprocess.run(f'git rev-list --left-right {a}...{b}',
+                            shell=True,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE).stdout.decode('utf-8').strip().split()
+        if all(map(lambda x: x[0] == '>', lr)):
+            return res
+        if all(map(lambda x: x[0] == '<', lr)):
+            return -1 * res
+
+        return 0
+
     def get_path(self):
         return self._path
 
