@@ -57,8 +57,7 @@ class TestRepo(unittest.TestCase):
             {'remote': {}, 'check': ['pull']},
         ]
         for d in bad_data:
-            with self.assertRaises(ValueError):
-                r.is_valid_data(d)
+            self.assertFalse(r.is_valid_data(d))
 
         ok_data = {'remote': {'name': 'origin', 'branch': 'master'}, 'check': ['push']}
         self.assertTrue(r.is_valid_data(ok_data))
@@ -71,12 +70,11 @@ class TestRepo(unittest.TestCase):
         ]
         for d in bad_data:
             r = repo(self.path, pre=d)
-            with self.assertRaises(ValueError):
-                r.pre()
+            self.assertFalse(r.pre())
 
         ok_data = {'remote': {'name': 'origin', 'branch': 'master'}, 'check': ['push']}
         r = repo(self.path, pre=ok_data)
-        r.pre()
+        self.assertTrue(r.pre())
 
     def test_post(self):
         bad_data = [
@@ -86,17 +84,20 @@ class TestRepo(unittest.TestCase):
         ]
         for d in bad_data:
             r = repo(self.path, post=d)
-            with self.assertRaises(ValueError):
-                r.post()
+            self.assertFalse(r.post())
 
-        d = {'remote': {'name': 'origin', 'branch': 'master'}, 'check': ['push']}
-        r = repo(self.path, post=d)
-        r.post()
+        ok_data = {'remote': {'name': 'origin', 'branch': 'master'}, 'check': ['push']}
+        r = repo(self.path, post=ok_data)
+        self.assertTrue(r.post())
 
     def test_is_inside_work_tree(self):
         path = self.path
         r = repo(path)
-        self.assertTrue(r.is_inside_work_tree(path))
+        self.assertTrue(r.is_inside_work_tree(r.path))
+
+        path = '~/'
+        r = repo(path)
+        self.assertFalse(r.is_inside_work_tree(r.path))
 
     def test_is_valid_path(self):
         path = self.path
@@ -104,9 +105,8 @@ class TestRepo(unittest.TestCase):
         self.assertTrue(r.is_valid_path(path))
 
         path = '~/'
-        with self.assertRaises(ValueError):
-            r = repo(path)
-            r.is_valid_path(path)
+        r = repo(path)
+        self.assertFalse(r.is_valid_path(path))
 
     def test_is_pushed(self):
         r = repo(self.path, pre=self.remote)
