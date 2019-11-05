@@ -104,18 +104,11 @@ class repo():
                        shell=True,
                        stdout=subprocess.PIPE,
                        stderr=subprocess.PIPE)
-        res = subprocess.run(f'git diff {remote_branch}',
-                             shell=True,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE)
-        if res.returncode != 0:
-            return False
-
-        res = res.stdout.decode('utf-8').strip()
-        if res == '':
-            return False
-        else:
+        res = self.git_commit_distance('HEAD', remote_branch)
+        if 0 <= res:
             return True
+        else:
+            return False
 
     def is_pushed(self, data):
         os.chdir(self.get_path())
@@ -124,11 +117,8 @@ class repo():
                              shell=True,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
-        if res.returncode != 0:
-            return False
-
-        res = res.stdout.decode('utf-8').strip()
-        if res == '':
+        res = self.git_commit_distance('HEAD', remote_branch)
+        if res <= 0:
             return True
         else:
             return False
