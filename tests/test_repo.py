@@ -120,6 +120,10 @@ class TestRepo(unittest.TestCase):
         r = repo(self.path, pre=self.remote)
         self.assertFalse(r.is_pulled(self.remote))
 
+    def test_git_commit_distance(self):
+        r = repo(self.path)
+        self.assertEqual(r.git_commit_distance('ac676ec', 'e02e693'), 4)
+
 
 if __name__ == '__main__':
     unittest.main()
