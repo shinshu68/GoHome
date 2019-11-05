@@ -9,15 +9,13 @@ class repo():
     post_commands = ['push', 'commit']
 
     def __init__(self, path, pre=None, post=None):
-        _path = str(Path(path).expanduser())
-        self.is_valid_path(_path)
-        self.path = _path
+        self._path = str(Path(path).expanduser())
         self._pre = pre
         self._post = post
 
     def __str__(self):
         return str({
-            'path': self.path,
+            'path': self.get_path(),
             'pre': self.get_pre(),
             'post': self.get_post()
         })
@@ -47,6 +45,9 @@ class repo():
         else:
             return False
 
+    def get_path(self):
+        return self._path
+
     def get_pre(self):
         return self._pre
 
@@ -70,7 +71,7 @@ class repo():
         return True
 
     def is_pulled(self, data):
-        os.chdir(self.path)
+        os.chdir(self.get_path())
         name = data['remote']['name']
         branch = data['remote']['branch']
         remote_branch = name + '/' + branch
@@ -92,7 +93,7 @@ class repo():
             return True
 
     def is_pushed(self, data):
-        os.chdir(self.path)
+        os.chdir(self.get_path())
         remote_branch = data['remote']['name'] + '/' + data['remote']['branch']
         res = subprocess.run(f'git diff {remote_branch}',
                              shell=True,
