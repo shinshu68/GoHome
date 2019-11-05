@@ -56,6 +56,8 @@ class repo():
 
     def pre(self):
         pre = self.get_pre()
+        if not self.is_valid_path(self.get_path()):
+            return False
         if not self.is_valid_data(pre):
             return False
         # for check in pre['check']:
@@ -65,6 +67,8 @@ class repo():
 
     def post(self):
         post = self.get_post()
+        if not self.is_valid_path(self.get_path()):
+            return False
         if not self.is_valid_data(post):
             return False
 
