@@ -118,7 +118,7 @@ class TestRepo(unittest.TestCase):
 
     def test_is_pulled(self):
         r = repo(self.path, pre=self.remote)
-        self.assertFalse(r.is_pulled(self.remote))
+        self.assertTrue(r.is_pulled(self.remote))
 
     def test_git_commit_distance(self):
         r = repo('~/workspace/prepost')
