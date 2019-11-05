@@ -24,16 +24,16 @@ class repo():
 
     def is_valid_path(self, path):
         if not os.path.exists(path) or not self.is_inside_work_tree(path):
-            raise ValueError
+            return False
         return True
 
     def is_valid_data(self, data):
         if 'check' not in data or len(data['check']) == 0:
-            raise ValueError
+            return False
         if 'remote' not in data:
-            raise ValueError
+            return False
         if 'name' not in data['remote'] or'branch' not in data['remote']:
-            raise ValueError
+            return False
         return True
 
     def is_inside_work_tree(self, path):
@@ -55,14 +55,19 @@ class repo():
 
     def pre(self):
         pre = self.get_pre()
-        self.is_valid_data(pre)
+        if not self.is_valid_data(pre):
+            return False
         # for check in pre['check']:
         #     if check in self.pre_commands:
         #         print(check)
+        return True
 
     def post(self):
         post = self.get_post()
-        self.is_valid_data(post)
+        if not self.is_valid_data(post):
+            return False
+
+        return True
 
     def is_pulled(self, data):
         os.chdir(self.path)
@@ -78,7 +83,7 @@ class repo():
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
         if res.returncode != 0:
-            return True
+            return False
 
         res = res.stdout.decode('utf-8').strip()
         if res == '':
