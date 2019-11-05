@@ -14,21 +14,21 @@ class TestRepo(unittest.TestCase):
             r = repo()
 
         r = repo(path=self.path)
-        self.assertEqual(r.path, self.path)
+        self.assertEqual(r._path, self.path)
 
         r = repo(path=self.path, pre=self.pre)
-        self.assertEqual(r.path, self.path)
+        self.assertEqual(r._path, self.path)
         self.assertEqual(r._pre, self.pre)
 
         r = repo(path=self.path, post=self.post)
-        self.assertEqual(r.path, self.path)
+        self.assertEqual(r._path, self.path)
         self.assertEqual(r._post, self.post)
 
         with self.assertRaises(TypeError):
             r = repo(pre=self.pre, post=self.post)
 
         r = repo(self.path, self.pre, self.post)
-        self.assertEqual(r.path, self.path)
+        self.assertEqual(r._path, self.path)
         self.assertEqual(r._pre, self.pre)
         self.assertEqual(r._post, self.post)
 
@@ -40,6 +40,10 @@ class TestRepo(unittest.TestCase):
             'post': self.post
         }
         self.assertEqual(str(r), str(d))
+
+    def test_get_path(self):
+        r = repo(self.path, self.pre, self.post)
+        self.assertEqual(self.path, r.get_path())
 
     def test_get_pre(self):
         r = repo(self.path, self.pre, self.post)
@@ -93,11 +97,11 @@ class TestRepo(unittest.TestCase):
     def test_is_inside_work_tree(self):
         path = self.path
         r = repo(path)
-        self.assertTrue(r.is_inside_work_tree(r.path))
+        self.assertTrue(r.is_inside_work_tree(r._path))
 
         path = '~/'
         r = repo(path)
-        self.assertFalse(r.is_inside_work_tree(r.path))
+        self.assertFalse(r.is_inside_work_tree(r._path))
 
     def test_is_valid_path(self):
         path = self.path
