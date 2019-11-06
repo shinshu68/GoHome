@@ -28,9 +28,7 @@ class repo():
     def is_valid_data(self, data):
         if 'check' not in data or len(data['check']) == 0:
             return False
-        if 'remote' not in data:
-            return False
-        if 'name' not in data['remote'] or'branch' not in data['remote']:
+        if 'remote' not in data or 'name' not in data['remote'] or'branch' not in data['remote']:
             return False
         return True
 
