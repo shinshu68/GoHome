@@ -100,10 +100,13 @@ class repo():
         name = data['remote']['name']
         branch = data['remote']['branch']
         remote_branch = name + '/' + branch
-        subprocess.run(f'git fetch {name} {branch}',
-                       shell=True,
-                       stdout=subprocess.PIPE,
-                       stderr=subprocess.PIPE)
+        res = subprocess.run(f'git fetch --dry-run {name} {branch}',
+                             shell=True,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE).stdout.decode('utf-8').strip()
+        if res != "":
+            return False
+
         res = self.git_commit_distance('HEAD', remote_branch)
         if 0 <= res:
             return True
