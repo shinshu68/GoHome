@@ -1,124 +1,121 @@
+import os
 import unittest
 from repo import repo
 
 
 class TestRepo(unittest.TestCase):
     def setUp(self):
-        self.path = '/home/shinshu/dotfiles'
-        self.pre = {'pull': True}
-        self.post = {'push': True}
-        self.remote = {'remote': {'branch': 'master', 'name': 'origin'}}
+        self.path = '~/workspace/prepost'
+        self.expand_path = f'{os.getenv("HOME")}/workspace/prepost'
+        self.data = {
+            'local': 'master',
+            'remote': {'branch': 'master', 'name': 'origin'},
+            'check': ['push', 'pull']
+        }
+        self.bad_data = [
+            {
+                # 'local': 'master',
+                'remote': {'branch': 'master', 'name': 'origin'},
+                'check': ['push', 'pull']
+            },
+            {
+                # 'local': 'master',
+                'remote': {'branch': 'master', 'name': 'origin'},
+                'check': ['push', 'pull']
+            },
+            {
+                'local': 'master',
+                'remote': {'branch': 'master', 'name': 'origin'},
+                # 'check': ['push', 'pull']
+            },
+        ]
 
     def test_repo_init(self):
         with self.assertRaises(TypeError):
             r = repo()
 
-        r = repo(path=self.path)
-        self.assertEqual(r._path, self.path)
-
-        r = repo(path=self.path, pre=self.pre)
-        self.assertEqual(r._path, self.path)
-        self.assertEqual(r._pre, self.pre)
-
-        r = repo(path=self.path, post=self.post)
-        self.assertEqual(r._path, self.path)
-        self.assertEqual(r._post, self.post)
+        with self.assertRaises(TypeError):
+            r = repo(path=self.path)
 
         with self.assertRaises(TypeError):
-            r = repo(pre=self.pre, post=self.post)
+            r = repo(data=self.data)
 
-        r = repo(self.path, self.pre, self.post)
+        r = repo(path=self.path, data=self.data)
         self.assertEqual(r._path, self.path)
-        self.assertEqual(r._pre, self.pre)
-        self.assertEqual(r._post, self.post)
+        self.assertEqual(r._data, self.data)
 
     def test_repo_str(self):
-        r = repo(self.path, self.pre, self.post)
+        r = repo(self.path, self.data)
         d = {
             'path': self.path,
-            'pre': self.pre,
-            'post': self.post
+            'expand_path': self.expand_path,
+            'data': self.data
         }
         self.assertEqual(str(r), str(d))
 
     def test_get_path(self):
-        r = repo(self.path, self.pre, self.post)
+        r = repo(self.path, self.data)
         self.assertEqual(self.path, r.get_path())
 
-    def test_get_pre(self):
-        r = repo(self.path, self.pre, self.post)
-        self.assertDictEqual(self.pre, r.get_pre())
+    def test_get_data(self):
+        r = repo(self.path, self.data)
+        self.assertDictEqual(self.data, r.get_data())
 
-    def test_get_post(self):
-        r = repo(self.path, self.pre, self.post)
-        self.assertDictEqual(self.post, r.get_post())
+    def test_get_expand_path(self):
+        r = repo(self.path, self.data)
+        self.assertDictEqual(self.expand_path, r.get_expand_path())
 
     def test_is_valid_data(self):
-        r = repo(self.path)
-        bad_data = [
-            {},
-            {'remote': {'name': 'origin', 'branch': 'master'}, 'check': []},
-            {'remote': {}, 'check': ['pull']},
-        ]
-        for d in bad_data:
-            self.assertFalse(r.is_valid_data(d))
+        for bad_data in self.bad_data:
+            with self.assertRaises(TypeError):
+                r = repo(self.path, bad_data)
 
-        ok_data = {'remote': {'name': 'origin', 'branch': 'master'}, 'check': ['push']}
+        ok_data = {
+            'local': 'master',
+            'remote': {'branch': 'master', 'name': 'origin'},
+            'check': ['push', 'pull']
+        }
+        r = repo(self.path, ok_data)
         self.assertTrue(r.is_valid_data(ok_data))
 
-    def test_pre(self):
-        bad_data = [
-            {},
-            {'remote': {'name': 'origin', 'branch': 'master'}, 'check': []},
-            {'remote': {}, 'check': ['pull']},
-        ]
-        for d in bad_data:
-            r = repo(self.path, pre=d)
-            self.assertFalse(r.pre())
+    def test_execute(self):
+        for bad_data in self.bad_data:
+            with self.assertRaises(TypeError):
+                r = repo(self.path, bad_data)
 
-        ok_data = {'remote': {'name': 'origin', 'branch': 'master'}, 'check': ['push']}
-        r = repo(self.path, pre=ok_data)
-        self.assertTrue(r.pre())
-
-    def test_post(self):
-        bad_data = [
-            {},
-            {'remote': {'name': 'origin', 'branch': 'master'}, 'check': []},
-            {'remote': {}, 'check': ['push']},
-        ]
-        for d in bad_data:
-            r = repo(self.path, post=d)
-            self.assertFalse(r.post())
-
-        ok_data = {'remote': {'name': 'origin', 'branch': 'master'}, 'check': ['push']}
-        r = repo(self.path, post=ok_data)
-        self.assertTrue(r.post())
+        ok_data = {
+            'local': 'master',
+            'remote': {'branch': 'master', 'name': 'origin'},
+            'check': ['push', 'pull']
+        }
+        r = repo(self.path, data=ok_data)
+        self.assertTrue(r.execute())
 
     def test_is_inside_work_tree(self):
-        path = self.path
-        r = repo(path)
-        self.assertTrue(r.is_inside_work_tree(r._path))
+        path = '~/workspace/prepost'
+        r = repo(path, self.data)
+        self.assertTrue(r.is_inside_work_tree(r.get_expand_path()))
 
         path = '~/'
-        r = repo(path)
-        self.assertFalse(r.is_inside_work_tree(r._path))
+        r = repo(path, self.data)
+        self.assertFalse(r.is_inside_work_tree(r.get_expand_path()))
 
     def test_is_valid_path(self):
-        path = self.path
-        r = repo(path)
-        self.assertTrue(r.is_valid_path(path))
+        path = '~/workspace/prepost'
+        r = repo(path, self.data)
+        self.assertTrue(r.is_valid_path(r.get_expand_path()))
 
         path = '~/'
-        r = repo(path)
-        self.assertFalse(r.is_valid_path(path))
+        r = repo(path, self.data)
+        self.assertFalse(r.is_valid_path(r.get_expand_path()))
 
     def test_is_pushed(self):
-        r = repo(self.path, pre=self.remote)
-        self.assertTrue(r.is_pushed(self.remote))
+        r = repo(self.path, self.data)
+        self.assertTrue(r.is_pushed(self.data))
 
     def test_is_pulled(self):
         r = repo(self.path, pre=self.remote)
-        self.assertTrue(r.is_pulled(self.remote))
+        self.assertTrue(r.is_pulled(self.data))
 
     def test_git_commit_distance(self):
         r = repo('~/workspace/prepost')
