@@ -1,21 +1,21 @@
-[[repo]]
+[pre]
+[[pre.repo]]
 path = '~/dotfiles'
-
-[repo.pre]
 check = ['pull']
-remote = { branch = 'master', name = 'origin' }
+data = { local = 'master', remote = { branch = 'master', name = 'origin' }}
 
-[repo.post]
-check = ['commit', 'push']
-remote = { branch = 'master', name = 'origin' }
-
-[[repo]]
-path = '~/shinshu_works'
-
-[repo.pre]
+[[pre.repo]]
+path = '~/workspace/prepost'
 check = ['pull']
-remote = { branch = 'master', name = 'origin' }
+data = { local = 'master', remote = { branch = 'master', name = 'origin' }}
 
-[repo.post]
-check = ['commit', 'push']
-remote = { branch = 'master', name = 'origin' }
+[post]
+[[post.repo]]
+path = '~/dotfiles'
+check = ['push']
+data = { local = 'master', remote = { branch = 'master', name = 'origin' }}
+
+[[post.repo]]
+path = '~/workspace/prepost'
+check = ['push']
+data = { local = 'master', remote = { branch = 'master', name = 'origin' }}
