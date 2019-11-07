@@ -76,7 +76,7 @@ class TestRepo(unittest.TestCase):
             'check': ['push', 'pull']
         }
         r = repo(self.path, ok_data)
-        self.assertTrue(r.is_valid_data(ok_data))
+        self.assertTrue(r.is_valid_data())
 
     def test_execute(self):
         for bad_data in self.bad_data:
@@ -92,30 +92,30 @@ class TestRepo(unittest.TestCase):
         self.assertTrue(r.execute())
 
     def test_is_inside_work_tree(self):
+        path = '~/'
+        with self.assertRaises(TypeError):
+            r = repo(path, self.data)
+
         path = '~/workspace/prepost'
         r = repo(path, self.data)
         self.assertTrue(r.is_inside_work_tree())
 
-        path = '~/'
-        r = repo(path, self.data)
-        self.assertFalse(r.is_inside_work_tree())
-
     def test_is_valid_path(self):
+        path = '~/'
+        with self.assertRaises(TypeError):
+            r = repo(path, self.data)
+
         path = '~/workspace/prepost'
         r = repo(path, self.data)
-        self.assertTrue(r.is_valid_path(r.get_expand_path()))
-
-        path = '~/'
-        r = repo(path, self.data)
-        self.assertFalse(r.is_valid_path(r.get_expand_path()))
+        self.assertTrue(r.is_valid_path())
 
     def test_is_pushed(self):
         r = repo(self.path, self.data)
-        self.assertTrue(r.is_pushed(self.data))
+        self.assertTrue(r.is_pushed())
 
     def test_is_pulled(self):
         r = repo(self.path, self.data)
-        self.assertTrue(r.is_pulled(self.data))
+        self.assertTrue(r.is_pulled())
 
     def test_git_commit_distance(self):
         r = repo('~/workspace/prepost', self.data)
