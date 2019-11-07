@@ -30,19 +30,21 @@ def main(mode='pre'):
     # print(json.dumps(config, indent=4, sort_keys=True, separators=(',', ': ')))
     # exit()
 
-    if 'repo' not in config:
-        print('repo statement is not exists.')
-        exit()
+    pre_list = {}
+    pre_list['repo'] = []
+    for repo in config.get('pre').get('repo'):
+        pre_list['repo'].append(Repo.repo(repo.get('path'), repo.get('data')))
 
-    repo_list = []
-    for repo in config.get('repo'):
-        repo_list.append(Repo.repo(repo.get('path'), repo.get('pre'), repo.get('post')))
+    post_list = {}
+    post_list['repo'] = []
+    for repo in config.get('post').get('repo'):
+        post_list['repo'].append(Repo.repo(repo.get('path'), repo.get('data')))
 
-    for repo in repo_list:
-        if mode == 'pre':
-            repo.pre()
-        else:
-            repo.post()
+    for repo in pre_list['repo']:
+        repo.execute()
+
+    for repo in post_list['repo']:
+        repo.execute()
 
 
 if __name__ == '__main__':
