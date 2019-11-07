@@ -63,7 +63,7 @@ class TestRepo(unittest.TestCase):
 
     def test_get_expand_path(self):
         r = repo(self.path, self.data)
-        self.assertDictEqual(self.expand_path, r.get_expand_path())
+        self.assertEqual(self.expand_path, r.get_expand_path())
 
     def test_is_valid_data(self):
         for bad_data in self.bad_data:
@@ -94,11 +94,11 @@ class TestRepo(unittest.TestCase):
     def test_is_inside_work_tree(self):
         path = '~/workspace/prepost'
         r = repo(path, self.data)
-        self.assertTrue(r.is_inside_work_tree(r.get_expand_path()))
+        self.assertTrue(r.is_inside_work_tree())
 
         path = '~/'
         r = repo(path, self.data)
-        self.assertFalse(r.is_inside_work_tree(r.get_expand_path()))
+        self.assertFalse(r.is_inside_work_tree())
 
     def test_is_valid_path(self):
         path = '~/workspace/prepost'
@@ -114,11 +114,11 @@ class TestRepo(unittest.TestCase):
         self.assertTrue(r.is_pushed(self.data))
 
     def test_is_pulled(self):
-        r = repo(self.path, pre=self.remote)
+        r = repo(self.path, self.data)
         self.assertTrue(r.is_pulled(self.data))
 
     def test_git_commit_distance(self):
-        r = repo('~/workspace/prepost')
+        r = repo('~/workspace/prepost', self.data)
         self.assertEqual(r.git_commit_distance('ac676ec', 'e02e693'), 4)
         self.assertEqual(r.git_commit_distance('e02e693', 'ac676ec'), -4)
         self.assertEqual(r.git_commit_distance('e02e693', 'e02e693'), 0)
