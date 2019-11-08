@@ -83,8 +83,8 @@ class repo():
             elif command == 'pull' and not self.is_pulled():
                 result['pull'] = False
 
-            # elif command == 'commit' and not self.is_committed():
-            #     result['commit'] = False
+            elif command == 'commit' and not self.is_committed():
+                result['commit'] = False
 
             else:
                 result[command] = True

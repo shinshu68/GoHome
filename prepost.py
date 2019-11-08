@@ -15,14 +15,13 @@ def get_config_file_path():
 
     if not os.path.exists(config_file_path):
         print('config file is not exists.')
+        exit()
 
     return config_file_path
 
 
 def main(mode='pre'):
     config_file = get_config_file_path()
-    if config_file == "":
-        exit()
 
     with open(config_file) as f:
         config = toml.load(f)
@@ -39,10 +38,10 @@ def main(mode='pre'):
         post_list.append(Repo.repo(repo.get('path'), repo.get('data')))
 
     for pre in pre_list:
-        pre.execute()
+        print(pre.execute())
 
     for post in post_list:
-        post.execute()
+        print(post.execute())
 
 
 if __name__ == '__main__':
