@@ -20,6 +20,8 @@ class repo():
             raise TypeError
         if 'commands' not in data or len(data['commands']) == 0:
             raise TypeError
+        if not all(map(lambda x: x in self.valid_commands, data['commands'])):
+            raise TypeError
         if 'remote' not in data or 'name' not in data['remote'] or'branch' not in data['remote']:
             raise TypeError
 
