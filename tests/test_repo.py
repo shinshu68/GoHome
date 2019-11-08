@@ -72,7 +72,11 @@ class TestRepo(unittest.TestCase):
 
     def test_execute(self):
         r = repo(self.path, self.data)
-        self.assertTrue(r.execute())
+        d = {
+            'pull': True,
+            'push': True
+        }
+        self.assertDictEqual(r.execute(), d)
 
     def test_is_inside_work_tree(self):
         path = '~/'
