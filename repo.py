@@ -22,7 +22,7 @@ class repo():
             raise TypeError
         if not all(map(lambda x: x in self.valid_commands, data['commands'])):
             raise TypeError
-        if 'remote' not in data or 'name' not in data['remote'] or'branch' not in data['remote']:
+        if 'remote' not in data or 'name' not in data['remote'] or 'branch' not in data['remote']:
             raise TypeError
 
     def __str__(self):
@@ -118,7 +118,9 @@ class repo():
                                  stderr=subprocess.PIPE).stdout.decode('utf-8').strip()
             if res != "":
                 return False
+
             val = func(self, *args, **kwargs)
+
             return val
         return wrapper
 
@@ -127,7 +129,9 @@ class repo():
     def is_pulled(self):
         data = self.get_data()
         remote_branch = data['remote']['name'] + '/' + data['remote']['branch']
+
         val = self.git_commit_distance('HEAD', remote_branch)
+
         if 0 <= val:
             return True
         else:
@@ -137,7 +141,9 @@ class repo():
     def is_pushed(self):
         data = self.get_data()
         remote_branch = data['remote']['name'] + '/' + data['remote']['branch']
+
         val = self.git_commit_distance('HEAD', remote_branch)
+
         if val <= 0:
             return True
         else:
