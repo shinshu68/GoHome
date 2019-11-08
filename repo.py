@@ -74,46 +74,65 @@ class repo():
         data = self.get_data()
         return True
 
+    def checkout_undo(func):
+        def wrapper(self, *args, **kwargs):
+            os.chdir(self.get_expand_path())
+            data = self.get_data()
+            now_branch = subprocess.run('git symbolic-ref --short HEAD',
+                                        shell=True,
+                                        stdout=subprocess.PIPE,
+                                        stderr=subprocess.PIPE).stdout.decode('utf-8').strip()
+            res = subprocess.run(f'git checkout {data["local"]}',
+                                 shell=True,
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE)
+            if res.returncode != 0:
+                return False
+
+            val = func(self, *args, **kwargs)
+
+            subprocess.run(f'git checkout {now_branch}',
+                           shell=True,
+                           stdout=subprocess.PIPE,
+                           stderr=subprocess.PIPE)
+            return val
+        return wrapper
+
+    def git_fetch(func):
+        def wrapper(self, *args, **kwargs):
+            os.chdir(self.get_expand_path())
+            data = self.get_data()
+            name = data['remote']['name']
+            branch = data['remote']['branch']
+            res = subprocess.run(f'git fetch --dry-run {name} {branch}',
+                                 shell=True,
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE).stdout.decode('utf-8').strip()
+            if res != "":
+                return False
+            val = func(self, *args, **kwargs)
+            return val
+        return wrapper
+
+    @git_fetch
+    @checkout_undo
     def is_pulled(self):
-        os.chdir(self.get_expand_path())
-        data = self.get_data()
-        name = data['remote']['name']
-        branch = data['remote']['branch']
-        remote_branch = name + '/' + branch
-        res = subprocess.run(f'git fetch --dry-run {name} {branch}',
-                             shell=True,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE).stdout.decode('utf-8').strip()
-        if res != "":
-            return False
-
-        now_branch = subprocess.run('git symbolic-ref --short HEAD',
-                                    shell=True,
-                                    stdout=subprocess.PIPE,
-                                    stderr=subprocess.PIPE).stdout.decode('utf-8').strip()
-        res = subprocess.run(f'git checkout {data["local"]}',
-                             shell=True,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE)
-        if res.returncode != 0:
-            return False
-
-        res = self.git_commit_distance('HEAD', remote_branch)
-        subprocess.run(f'git checkout {now_branch}',
-                       shell=True,
-                       stdout=subprocess.PIPE,
-                       stderr=subprocess.PIPE)
-        if 0 <= res:
-            return True
-        else:
-            return False
-
-    def is_pushed(self):
-        os.chdir(self.get_expand_path())
         data = self.get_data()
         remote_branch = data['remote']['name'] + '/' + data['remote']['branch']
-        res = self.git_commit_distance('HEAD', remote_branch)
-        if res <= 0:
+        val = self.git_commit_distance('HEAD', remote_branch)
+        if 0 <= val:
             return True
         else:
             return False
+
+    @checkout_undo
+    def is_pushed(self):
+        data = self.get_data()
+        remote_branch = data['remote']['name'] + '/' + data['remote']['branch']
+        val = self.git_commit_distance('HEAD', remote_branch)
+        if val <= 0:
+            return True
+        else:
+            return False
+
+
