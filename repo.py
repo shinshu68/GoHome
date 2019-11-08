@@ -38,10 +38,8 @@ class repo():
                              shell=True,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE).stdout.decode('utf-8').strip()
-        if res == 'true':
-            return True
-        else:
-            return False
+
+        return True if res == 'true' else False
 
     # 2コミット間の距離を返す
     # ahead -> +, behind -> -, equal or ahead behind -> 0
@@ -146,10 +144,7 @@ class repo():
 
         val = self.git_commit_distance('HEAD', remote_branch)
 
-        if val <= 0:
-            return True
-        else:
-            return False
+        return True if val <= 0 else False
 
     @checkout_undo
     def is_pushed(self):
@@ -158,10 +153,7 @@ class repo():
 
         val = self.git_commit_distance('HEAD', remote_branch)
 
-        if 0 <= val:
-            return True
-        else:
-            return False
+        return True if 0 <= val else False
 
     @checkout_undo
     def is_committed(self):
@@ -169,8 +161,6 @@ class repo():
                              shell=True,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE).stdout.decode('utf-8').strip().split()
-        if len(res) == 0:
-            return True
-        else:
-            return False
+
+        return True if len(res) == 0 else False
 
