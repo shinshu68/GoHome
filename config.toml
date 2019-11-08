@@ -9,7 +9,7 @@ remote = { branch = 'master', name = 'origin' }
 [[pre.repo]]
 path = '~/workspace/prepost'
 [pre.repo.data]
-commands = ['push']
+commands = ['pull']
 local = 'master'
 remote = { branch = 'master', name = 'origin' }
 
@@ -17,7 +17,7 @@ remote = { branch = 'master', name = 'origin' }
 [[post.repo]]
 path = '~/dotfiles'
 [post.repo.data]
-commands = ['pull']
+commands = ['push']
 local = 'master'
 remote = { branch = 'master', name = 'origin' }
 
