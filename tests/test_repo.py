@@ -28,6 +28,11 @@ class TestRepo(unittest.TestCase):
                 'remote': {'branch': 'master', 'name': 'origin'},
                 # 'commands': ['push', 'pull']
             },
+            {
+                'local': 'master',
+                'remote': {'branch': 'master', 'name': 'origin'},
+                'commands': ['hoge', 'fuga']
+            },
         ]
 
     def test_repo_init(self):
