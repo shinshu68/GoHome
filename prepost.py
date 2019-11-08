@@ -35,7 +35,7 @@ def main(mode):
             pre_list.append(Repo.repo(repo.get('path'), repo.get('data')))
 
         for pre in pre_list:
-            print(pre.execute())
+            print(pre.get_path(), pre.execute())
 
     if mode == 'post':
         post_list = []
@@ -43,7 +43,7 @@ def main(mode):
             post_list.append(Repo.repo(repo.get('path'), repo.get('data')))
 
         for post in post_list:
-            print(post.execute())
+            print(post.get_path(), post.execute())
 
 
 if __name__ == '__main__':
