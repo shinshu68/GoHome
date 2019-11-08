@@ -146,7 +146,7 @@ class repo():
 
         val = self.git_commit_distance('HEAD', remote_branch)
 
-        if 0 <= val:
+        if val <= 0:
             return True
         else:
             return False
@@ -158,7 +158,7 @@ class repo():
 
         val = self.git_commit_distance('HEAD', remote_branch)
 
-        if val <= 0:
+        if 0 <= val:
             return True
         else:
             return False
