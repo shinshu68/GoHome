@@ -65,19 +65,6 @@ class TestRepo(unittest.TestCase):
         r = repo(self.path, self.data)
         self.assertEqual(self.expand_path, r.get_expand_path())
 
-    def test_is_valid_data(self):
-        for bad_data in self.bad_data:
-            with self.assertRaises(TypeError):
-                r = repo(self.path, bad_data)
-
-        ok_data = {
-            'local': 'master',
-            'remote': {'branch': 'master', 'name': 'origin'},
-            'check': ['push', 'pull']
-        }
-        r = repo(self.path, ok_data)
-        self.assertTrue(r.is_valid_data())
-
     def test_execute(self):
         for bad_data in self.bad_data:
             with self.assertRaises(TypeError):
@@ -99,15 +86,6 @@ class TestRepo(unittest.TestCase):
         path = '~/workspace/prepost'
         r = repo(path, self.data)
         self.assertTrue(r.is_inside_work_tree())
-
-    def test_is_valid_path(self):
-        path = '~/'
-        with self.assertRaises(TypeError):
-            r = repo(path, self.data)
-
-        path = '~/workspace/prepost'
-        r = repo(path, self.data)
-        self.assertTrue(r.is_valid_path())
 
     def test_is_pushed(self):
         r = repo(self.path, self.data)
