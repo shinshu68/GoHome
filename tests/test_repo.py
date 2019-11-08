@@ -66,16 +66,7 @@ class TestRepo(unittest.TestCase):
         self.assertEqual(self.expand_path, r.get_expand_path())
 
     def test_execute(self):
-        for bad_data in self.bad_data:
-            with self.assertRaises(TypeError):
-                r = repo(self.path, bad_data)
-
-        ok_data = {
-            'local': 'master',
-            'remote': {'branch': 'master', 'name': 'origin'},
-            'check': ['push', 'pull']
-        }
-        r = repo(self.path, data=ok_data)
+        r = repo(self.path, self.data)
         self.assertTrue(r.execute())
 
     def test_is_inside_work_tree(self):
