@@ -12,9 +12,11 @@ class repo():
         self._path = path
         self._data = data
 
+        # pathが有効かどうか
         if not os.path.exists(self.get_expand_path()) or not self.is_inside_work_tree():
             raise TypeError
 
+        # dataが有効かどうか
         if 'local' not in data or len(data['local']) == 0:
             raise TypeError
         if 'check' not in data or len(data['check']) == 0:
@@ -40,6 +42,8 @@ class repo():
         else:
             return False
 
+    # 2コミット間の距離を返す
+    # ahead -> +, behind -> -, equal or ahead behind -> 0
     def git_commit_distance(self, a, b):
         os.chdir(self.get_expand_path())
         res = subprocess.run(f'git rev-list --count {a}...{b}',
@@ -74,6 +78,8 @@ class repo():
         data = self.get_data()
         return True
 
+    # dataに保存されているlocalブランチにcheckoutした後、
+    # 関数を実行し、元々のブランチに戻る
     def checkout_undo(func):
         def wrapper(self, *args, **kwargs):
             os.chdir(self.get_expand_path())
@@ -98,6 +104,7 @@ class repo():
             return val
         return wrapper
 
+    # remoteをfetchする
     def git_fetch(func):
         def wrapper(self, *args, **kwargs):
             os.chdir(self.get_expand_path())
