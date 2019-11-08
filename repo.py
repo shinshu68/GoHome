@@ -11,9 +11,15 @@ class repo():
     def __init__(self, path, data):
         self._path = path
         self._data = data
-        if not self.is_valid_path():
+
+        if not os.path.exists(self.get_expand_path()) or not self.is_inside_work_tree():
             raise TypeError
-        if not self.is_valid_data():
+
+        if 'local' not in data or len(data['local']) == 0:
+            raise TypeError
+        if 'check' not in data or len(data['check']) == 0:
+            raise TypeError
+        if 'remote' not in data or 'name' not in data['remote'] or'branch' not in data['remote']:
             raise TypeError
 
     def __str__(self):
@@ -22,21 +28,6 @@ class repo():
             'expand_path': self.get_expand_path(),
             'data': self.get_data()
         })
-
-    def is_valid_path(self):
-        if not os.path.exists(self.get_expand_path()) or not self.is_inside_work_tree():
-            return False
-        return True
-
-    def is_valid_data(self):
-        data = self.get_data()
-        if 'local' not in data or len(data['local']) == 0:
-            return False
-        if 'check' not in data or len(data['check']) == 0:
-            return False
-        if 'remote' not in data or 'name' not in data['remote'] or'branch' not in data['remote']:
-            return False
-        return True
 
     def is_inside_work_tree(self):
         os.chdir(self.get_expand_path())
