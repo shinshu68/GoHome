@@ -2,14 +2,14 @@
 [[pre.repo]]
 path = '~/dotfiles'
 [pre.repo.data]
-command = ['pull']
+commands = ['pull']
 local = 'master'
 remote = { branch = 'master', name = 'origin' }
 
 [[pre.repo]]
 path = '~/workspace/prepost'
 [pre.repo.data]
-command = ['push']
+commands = ['push']
 local = 'master'
 remote = { branch = 'master', name = 'origin' }
 
@@ -17,13 +17,13 @@ remote = { branch = 'master', name = 'origin' }
 [[post.repo]]
 path = '~/dotfiles'
 [post.repo.data]
-command = ['pull']
+commands = ['pull']
 local = 'master'
 remote = { branch = 'master', name = 'origin' }
 
 [[post.repo]]
 path = '~/workspace/prepost'
 [post.repo.data]
-command = ['push']
+commands = ['push']
 local = 'master'
 remote = { branch = 'master', name = 'origin' }
