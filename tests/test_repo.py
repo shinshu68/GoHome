@@ -95,6 +95,10 @@ class TestRepo(unittest.TestCase):
         r = repo(self.path, self.data)
         self.assertTrue(r.is_pulled())
 
+    def test_is_committed(self):
+        r = repo(self.path, self.data)
+        self.assertTrue(r.is_committed())
+
     def test_git_commit_distance(self):
         r = repo('~/workspace/prepost', self.data)
         self.assertEqual(r.git_commit_distance('ac676ec', 'e02e693'), 4)
