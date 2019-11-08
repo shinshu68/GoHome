@@ -13,17 +13,17 @@ class repo():
 
         # pathが有効かどうか
         if not os.path.exists(self.get_expand_path()) or not self.is_inside_work_tree():
-            raise TypeError
+            raise TypeError('path is not exists or path is not inside git work tree.')
 
         # dataが有効かどうか
         if 'local' not in data or len(data['local']) == 0:
-            raise TypeError
+            raise TypeError('local not in data or local length is 0.')
         if 'commands' not in data or len(data['commands']) == 0:
-            raise TypeError
+            raise TypeError('commands not in data or commands length is 0.')
         if not all(map(lambda x: x in self.valid_commands, data['commands'])):
-            raise TypeError
+            raise TypeError('found not in valid_commands command.')
         if 'remote' not in data or 'name' not in data['remote'] or 'branch' not in data['remote']:
-            raise TypeError
+            raise TypeError('remote not in data or (name or branch) not in remote.')
 
     def __str__(self):
         return str({
