@@ -10,23 +10,23 @@ class TestRepo(unittest.TestCase):
         self.data = {
             'local': 'master',
             'remote': {'branch': 'master', 'name': 'origin'},
-            'check': ['push', 'pull']
+            'commands': ['push', 'pull']
         }
         self.bad_data = [
             {
                 # 'local': 'master',
                 'remote': {'branch': 'master', 'name': 'origin'},
-                'check': ['push', 'pull']
+                'commands': ['push', 'pull']
             },
             {
                 # 'local': 'master',
                 'remote': {'branch': 'master', 'name': 'origin'},
-                'check': ['push', 'pull']
+                'commands': ['push', 'pull']
             },
             {
                 'local': 'master',
                 'remote': {'branch': 'master', 'name': 'origin'},
-                # 'check': ['push', 'pull']
+                # 'commands': ['push', 'pull']
             },
         ]
 

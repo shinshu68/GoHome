@@ -5,8 +5,7 @@ import subprocess
 
 
 class repo():
-    pre_commands = ['pull']
-    post_commands = ['push', 'commit']
+    valid_commands = ['push', 'commit', 'pull']
 
     def __init__(self, path, data):
         self._path = path
@@ -19,7 +18,7 @@ class repo():
         # dataが有効かどうか
         if 'local' not in data or len(data['local']) == 0:
             raise TypeError
-        if 'check' not in data or len(data['check']) == 0:
+        if 'commands' not in data or len(data['commands']) == 0:
             raise TypeError
         if 'remote' not in data or 'name' not in data['remote'] or'branch' not in data['remote']:
             raise TypeError
