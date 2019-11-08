@@ -117,32 +117,17 @@ class repo():
             return val
         return wrapper
 
-    # remoteをfetchする
-    def git_fetch(func):
-        def wrapper(self, *args, **kwargs):
-            os.chdir(self.get_expand_path())
-            data = self.get_data()
-            name = data['remote']['name']
-            branch = data['remote']['branch']
-            res = subprocess.run(f'git fetch --dry-run {name} {branch}',
-                                 shell=True,
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE).stdout.decode('utf-8').strip()
-            if res != "":
-                return False
-
-            val = func(self, *args, **kwargs)
-
-            return val
-        return wrapper
-
-    @git_fetch
     @checkout_undo
     def is_pulled(self):
         data = self.get_data()
-        remote_branch = data['remote']['name'] + '/' + data['remote']['branch']
+        name = data['remote']['name']
+        branch = data['remote']['branch']
+        remote_head = subprocess.run(f'git ls-remote {name} {branch}',
+                                     shell=True,
+                                     stdout=subprocess.PIPE,
+                                     stderr=subprocess.PIPE).stdout.decode('utf-8').strip().split()[0]
 
-        val = self.git_commit_distance('HEAD', remote_branch)
+        val = self.git_commit_distance('HEAD', remote_head)
 
         return True if val <= 0 else False
 
