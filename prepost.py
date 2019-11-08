@@ -30,21 +30,19 @@ def main(mode='pre'):
     # print(json.dumps(config, indent=4, sort_keys=True, separators=(',', ': ')))
     # exit()
 
-    pre_list = {}
-    pre_list['repo'] = []
+    pre_list = []
     for repo in config.get('pre').get('repo'):
-        pre_list['repo'].append(Repo.repo(repo.get('path'), repo.get('data')))
+        pre_list.append(Repo.repo(repo.get('path'), repo.get('data')))
 
-    post_list = {}
-    post_list['repo'] = []
+    post_list = []
     for repo in config.get('post').get('repo'):
-        post_list['repo'].append(Repo.repo(repo.get('path'), repo.get('data')))
+        post_list.append(Repo.repo(repo.get('path'), repo.get('data')))
 
-    for repo in pre_list['repo']:
-        repo.execute()
+    for pre in pre_list:
+        pre.execute()
 
-    for repo in post_list['repo']:
-        repo.execute()
+    for post in post_list:
+        post.execute()
 
 
 if __name__ == '__main__':
