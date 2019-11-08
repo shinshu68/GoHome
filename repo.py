@@ -77,7 +77,21 @@ class repo():
 
     def execute(self):
         data = self.get_data()
-        return True
+        result = {}
+        for command in data['commands']:
+            if command == 'push' and not self.is_pushed():
+                result['push'] = False
+
+            elif command == 'pull' and not self.is_pulled():
+                result['pull'] = False
+
+            # elif command == 'commit' and not self.is_committed():
+            #     result['commit'] = False
+
+            else:
+                result[command] = True
+
+        return result
 
     # dataに保存されているlocalブランチにcheckoutした後、
     # 関数を実行し、元々のブランチに戻る
