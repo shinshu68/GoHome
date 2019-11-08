@@ -163,4 +163,14 @@ class repo():
         else:
             return False
 
+    @checkout_undo
+    def is_committed(self):
+        res = subprocess.run('git diff -name-only',
+                             shell=True,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE).stdout.decode('utf-8').strip().split()
+        if len(res) == 0:
+            return True
+        else:
+            return False
 
