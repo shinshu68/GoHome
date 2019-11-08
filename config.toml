@@ -17,13 +17,13 @@ remote = { branch = 'master', name = 'origin' }
 [[post.repo]]
 path = '~/dotfiles'
 [post.repo.data]
-commands = ['push']
+commands = ['commit', 'push']
 local = 'master'
 remote = { branch = 'master', name = 'origin' }
 
 [[post.repo]]
 path = '~/workspace/prepost'
 [post.repo.data]
-commands = ['push']
+commands = ['commit', 'push']
 local = 'master'
 remote = { branch = 'master', name = 'origin' }
