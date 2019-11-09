@@ -32,6 +32,16 @@ class repo():
             'data': self.get_data()
         })
 
+    def is_exists_local_branch(self):
+        os.chdir(self.get_expand_path())
+        local = self.get_data()['local']
+        res = subprocess.run(f'git rev-parse --verify {local}',
+                             shell=True,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+
+        return True if res.returncode == 0 else False
+
     def is_inside_work_tree(self):
         os.chdir(self.get_expand_path())
         res = subprocess.run('git rev-parse --is-inside-work-tree',
