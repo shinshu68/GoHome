@@ -101,6 +101,12 @@ class TestRepo(unittest.TestCase):
 
     def test_git_commit_distance(self):
         r = repo('~/workspace/prepost', self.data)
+        # git log --oneline
+        # e02e693 :hammer: パスが有効かチェックする命令を追加
+        # e9468b5 :sparkles: テストを満たす関数を作成
+        # fbc1a76 :sparkles: テスト追加
+        # 144ec46 :sparkles: テストを満たすように関数を修正
+        # ac676ec :bug: 例外を投げるのは微妙に感じたのでtrue/falseに変更
         self.assertEqual(r.git_commit_distance('ac676ec', 'e02e693'), 4)
         self.assertEqual(r.git_commit_distance('e02e693', 'ac676ec'), -4)
         self.assertEqual(r.git_commit_distance('e02e693', 'e02e693'), 0)
