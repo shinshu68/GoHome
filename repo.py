@@ -12,18 +12,33 @@ class repo():
         self._data = data
 
         # pathが有効かどうか
-        if not os.path.exists(self.get_expand_path()) or not self.is_inside_work_tree():
-            raise TypeError('path is not exists or path is not inside git work tree.')
+        if not os.path.exists(self.get_expand_path()):
+            raise TypeError(f'{path} is not exists.')
+        if not self.is_inside_work_tree():
+            raise TypeError(f'{path} is not inside git work tree.')
 
         # dataが有効かどうか
-        if 'local' not in data or len(data['local']) == 0:
-            raise TypeError('local not in data or local length is 0.')
-        if 'commands' not in data or len(data['commands']) == 0:
-            raise TypeError('commands not in data or commands length is 0.')
+        # data['local']が有効かどうか
+        if 'local' not in data:
+            raise TypeError('"local" not in data')
+        if not self.is_exists_local_branch():
+            raise TypeError(f'"local" branch({data["local"]}) is not found in {path}.')
+
+        # data['commands']が有効かどうか
+        if 'commands' not in data:
+            raise TypeError('"commands" not in data.')
+        if len(data['commands']) == 0:
+            raise TypeError('"commands" length is 0.')
         if not all(map(lambda x: x in self.valid_commands, data['commands'])):
             raise TypeError('found not in valid_commands command.')
-        if 'remote' not in data or 'name' not in data['remote'] or 'branch' not in data['remote']:
-            raise TypeError('remote not in data or (name or branch) not in remote.')
+
+        # data['remote']が有効かどうか
+        if 'remote' not in data:
+            raise TypeError('"remote" not in data.')
+        if 'name' not in data['remote']:
+            raise TypeError('name not in data["remote"].')
+        if 'branch' not in data['remote']:
+            raise TypeError('branch not in data["remote"].')
 
     def __str__(self):
         return str({
