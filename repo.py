@@ -13,9 +13,9 @@ class repo():
 
         # pathが有効かどうか
         if not os.path.exists(self.get_expand_path()):
-            raise TypeError(f'{path} is not exists.')
+            raise TypeError(f'"{path}" is not exists.')
         if not self.is_inside_work_tree():
-            raise TypeError(f'{path} is not inside git work tree.')
+            raise TypeError(f'"{path}" is not inside git work tree.')
 
         # dataが有効かどうか
         # data['local']が有効かどうか
@@ -36,9 +36,9 @@ class repo():
         if 'remote' not in data:
             raise TypeError('"remote" not in data.')
         if 'name' not in data['remote']:
-            raise TypeError('name not in data["remote"].')
+            raise TypeError('"name" not in data["remote"].')
         if 'branch' not in data['remote']:
-            raise TypeError('branch not in data["remote"].')
+            raise TypeError('"branch" not in data["remote"].')
 
     def __str__(self):
         return str({
