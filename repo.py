@@ -73,11 +73,10 @@ class repo():
     # ahead -> +, behind -> -, equal or ahead behind -> 0
     def git_commit_distance(self, a, b):
         os.chdir(self.get_expand_path())
-        res = subprocess.run(f'git rev-list --count {a}...{b}',
-                             shell=True,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE).stdout.decode('utf-8').strip()
-        res = int(res)
+        res = int(subprocess.run(f'git rev-list --count {a}...{b}',
+                                 shell=True,
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE).stdout.decode('utf-8').strip())
         if res == 0:
             return 0
 
