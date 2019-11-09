@@ -33,6 +33,11 @@ class TestRepo(unittest.TestCase):
                 'remote': {'branch': 'master', 'name': 'origin'},
                 'commands': ['hoge', 'fuga']
             },
+            {
+                'local': 'hoge',
+                'remote': {'branch': 'master', 'name': 'origin'},
+                'commands': ['push', 'pull']
+            }
         ]
 
     def test_repo_init(self):
@@ -86,6 +91,20 @@ class TestRepo(unittest.TestCase):
         path = '~/workspace/prepost'
         r = repo(path, self.data)
         self.assertTrue(r.is_inside_work_tree())
+
+    def test_is_exists_local_branch(self):
+        path = self.path
+        data = {
+            'local': 'hoge',
+            'remote': {'branch': 'master', 'name': 'origin'},
+            'commands': ['push', 'pull']
+        }
+        with self.assertRaises(TypeError):
+            r = repo(path, data)
+
+        path = self.path
+        r = repo(path, self.data)
+        self.assertTrue(r.is_exists_local_branch())
 
     def test_is_pushed(self):
         r = repo(self.path, self.data)
