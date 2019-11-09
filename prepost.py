@@ -4,6 +4,8 @@ import repo as Repo
 import subprocess
 import sys
 import toml
+from multiprocessing import Process
+from multiprocessing import Pipe
 
 
 def get_config_file_path():
@@ -20,6 +22,11 @@ def get_config_file_path():
     return config_file_path
 
 
+def repo_create_execute(repo, send_rev):
+    item = Repo.repo(repo.get('path'), repo.get('data'))
+    send_rev.send((item.get_path(), item.execute()))
+
+
 def main(mode):
     with open(get_config_file_path()) as f:
         config = toml.load(f)
@@ -27,12 +34,21 @@ def main(mode):
     # print(json.dumps(config, indent=4, sort_keys=True, separators=(',', ': ')))
     # exit()
 
-    item_list = []
+    pipe_list = []
+    process_list = []
     for repo in config.get(mode).get('repo'):
-        item_list.append(Repo.repo(repo.get('path'), repo.get('data')))
+        get_rev, send_rev = Pipe(False)
+        process = Process(target=repo_create_execute, args=(repo, send_rev))
+        process_list.append(process)
+        pipe_list.append(get_rev)
+        process.start()
 
-    for item in item_list:
-        print(item.get_path(), item.execute())
+    for process in process_list:
+        process.join()
+
+    result_list = [x.recv() for x in pipe_list]
+    for res in result_list:
+        print(res)
 
 
 if __name__ == '__main__':
