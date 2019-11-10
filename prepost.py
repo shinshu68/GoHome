@@ -24,7 +24,7 @@ def get_config_file_path():
 
 def repo_create_execute(repo, send_rev):
     item = Repo.repo(repo.get('path'), repo.get('data'))
-    send_rev.send((item.get_path(), item.execute()))
+    send_rev.send({'path': item.get_path(), "result": item.execute()})
 
 
 def main(mode):
