@@ -27,6 +27,7 @@ class repo():
         # data['commands']が有効かどうか
         if 'commands' not in data:
             raise TypeError('"commands" not in data.')
+        data['commands'] = set(data['commands'])
         if len(data['commands']) == 0:
             raise TypeError('"commands" is empty.')
         is_valid_list = [x in self.valid_commands for x in data['commands']]
@@ -42,6 +43,8 @@ class repo():
             raise TypeError('"name" not in data["remote"].')
         if 'branch' not in data['remote']:
             raise TypeError('"branch" not in data["remote"].')
+
+        self._data = data
 
     def __str__(self):
         return str({
