@@ -107,17 +107,17 @@ class repo():
         data = self.get_data()
         result = {}
         for command in data['commands']:
-            if command == 'push' and not self.is_pushed():
-                result['push'] = False
+            if command == 'push' and self.is_pushed():
+                result['push'] = True
 
-            elif command == 'pull' and not self.is_pulled():
-                result['pull'] = False
+            elif command == 'pull' and self.is_pulled():
+                result['pull'] = True
 
-            elif command == 'commit' and not self.is_committed():
-                result['commit'] = False
+            elif command == 'commit' and self.is_committed():
+                result['commit'] = True
 
             else:
-                result[command] = True
+                result[command] = False
 
         return result
 
