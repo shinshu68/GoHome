@@ -151,6 +151,10 @@ class repo():
         data = self.get_data()
         name = data['remote']['name']
         branch = data['remote']['branch']
+        subprocess.run(f'git fetch --dry-run {name} {branch}',
+                       shell=True,
+                       stdout=subprocess.PIPE,
+                       stderr=subprocess.PIPE)
         remote_head = subprocess.run(f'git ls-remote {name} {branch}',
                                      shell=True,
                                      stdout=subprocess.PIPE,
