@@ -1,6 +1,6 @@
 import os
 import unittest
-from repo import repo
+from src.repo import repo
 
 
 class TestRepo(unittest.TestCase):
