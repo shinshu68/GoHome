@@ -1,11 +1,11 @@
+from multiprocessing import Pipe
+from multiprocessing import Process
 import json
 import os
 import repo as Repo
 import subprocess
 import sys
 import toml
-from multiprocessing import Process
-from multiprocessing import Pipe
 
 
 def get_config_file_path():
