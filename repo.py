@@ -30,11 +30,10 @@ class repo():
         data['commands'] = set(data['commands'])
         if len(data['commands']) == 0:
             raise TypeError('"commands" is empty.')
-        is_valid_list = [x in self.valid_commands for x in data['commands']]
-        if not all(is_valid_list):
-            for i, x in enumerate(is_valid_list):
-                if not x:
-                    raise TypeError(f'"{data["commands"][i]}" is not in valid_commands command.')
+
+        invalid_list = [command for command in data['commands'] if command not in self.valid_commands]
+        if len(invalid_list) != 0:
+            raise TypeError(f'"{invalid_list}" is not in valid_commands command.')
 
         # data['remote']が有効かどうか
         if 'remote' not in data:
