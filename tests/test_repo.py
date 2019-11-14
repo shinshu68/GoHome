@@ -130,6 +130,11 @@ class TestRepo(unittest.TestCase):
         self.assertEqual(r.git_commit_distance('e02e693', 'ac676ec'), -4)
         self.assertEqual(r.git_commit_distance('e02e693', 'e02e693'), 0)
 
+    def test_is_exists_commit_hash(self):
+        r = repo(self.path, self.data)
+        self.assertFalse(r.is_exists_commit_hash(0))
+        self.assertTrue(r.is_exists_commit_hash('ac676ec'))
+
 
 if __name__ == '__main__':
     unittest.main()
