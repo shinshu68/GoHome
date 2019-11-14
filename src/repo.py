@@ -71,6 +71,15 @@ class repo():
 
         return True if res == 'true' else False
 
+    def is_exists_commit_hash(self, commit_hash):
+        os.chdir(self.get_expand_path())
+        res = subprocess.run(f'git rev-list {commit_hash}',
+                             shell=True,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+
+        return True if res.returncode == 0 else False
+
     # 2コミット間の距離を返す
     # ahead -> +, behind -> -, equal or ahead behind -> 0
     def git_commit_distance(self, a, b):
