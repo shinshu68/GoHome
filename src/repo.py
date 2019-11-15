@@ -166,10 +166,11 @@ class repo():
                                      stderr=subprocess.PIPE).stdout.decode('utf-8').strip().split()[0]
 
         if not self.is_exists_commit_hash(remote_head):
-            subprocess.run(f'git fetch --dry-run {name} {branch}',
-                           shell=True,
-                           stdout=subprocess.PIPE,
-                           stderr=subprocess.PIPE)
+            return False
+            # subprocess.run(f'git fetch --dry-run {name} {branch}',
+            #                shell=True,
+            #                stdout=subprocess.PIPE,
+            #                stderr=subprocess.PIPE)
 
         val = self.git_commit_distance('HEAD', remote_head)
 
