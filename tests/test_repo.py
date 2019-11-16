@@ -50,6 +50,10 @@ class TestRepo(unittest.TestCase):
         with self.assertRaises(TypeError):
             r = repo(data=self.data)
 
+        for data in self.bad_data:
+            with self.assertRaises(TypeError):
+                r = repo(path=self.path, data=data)
+
         r = repo(path=self.path, data=self.data)
         self.assertEqual(r._path, self.path)
         self.assertEqual(r._data, self.data)
