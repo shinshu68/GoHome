@@ -8,25 +8,36 @@ class repo():
     valid_commands = ['push', 'commit', 'pull']
 
     def __init__(self, path, data):
-        self._path = path
-        self._data = data
-
         # pathが有効かどうか
-        if not os.path.exists(self.get_expand_path()):
+        if not os.path.exists(str(Path(path).expanduser())):
             raise TypeError(f'"{path}" is not exists.')
-        if not self.is_inside_work_tree():
+
+        # pathがgit管理のディレクトリかどうか
+        os.chdir(str(Path(path).expanduser()))
+        res = subprocess.run('git rev-parse --is-inside-work-tree',
+                             shell=True,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE).stdout.decode('utf-8').strip()
+        if res != 'true':
             raise TypeError(f'"{path}" is not inside git work tree.')
 
         # dataが有効かどうか
-        # data['local']が有効かどうか
         if 'local' not in data:
             raise TypeError('"local" not in data')
-        if not self.is_exists_local_branch():
+
+        # data['local']ブランチが存在するか
+        os.chdir(str(Path(path).expanduser()))
+        res = subprocess.run(f'git rev-parse --verify {data["local"]}',
+                             shell=True,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+        if res.returncode != 0:
             raise TypeError(f'"local" branch({data["local"]}) is not found in {path}.')
 
         # data['commands']が有効かどうか
         if 'commands' not in data:
             raise TypeError('"commands" not in data.')
+
         data['commands'] = set(data['commands'])
         if len(data['commands']) == 0:
             raise TypeError('"commands" is empty.')
@@ -43,6 +54,7 @@ class repo():
         if 'branch' not in data['remote']:
             raise TypeError('"branch" not in data["remote"].')
 
+        self._path = path
         self._data = data
 
     def __str__(self):
@@ -51,25 +63,6 @@ class repo():
             'expand_path': self.get_expand_path(),
             'data': self.get_data()
         })
-
-    def is_exists_local_branch(self):
-        os.chdir(self.get_expand_path())
-        local = self.get_data()['local']
-        res = subprocess.run(f'git rev-parse --verify {local}',
-                             shell=True,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE)
-
-        return True if res.returncode == 0 else False
-
-    def is_inside_work_tree(self):
-        os.chdir(self.get_expand_path())
-        res = subprocess.run('git rev-parse --is-inside-work-tree',
-                             shell=True,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE).stdout.decode('utf-8').strip()
-
-        return True if res == 'true' else False
 
     def is_exists_commit_hash(self, commit_hash):
         os.chdir(self.get_expand_path())
