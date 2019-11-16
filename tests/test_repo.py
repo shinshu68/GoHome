@@ -83,29 +83,6 @@ class TestRepo(unittest.TestCase):
         }
         self.assertDictEqual(r.execute(), d)
 
-    def test_is_inside_work_tree(self):
-        path = '~/'
-        with self.assertRaises(TypeError):
-            r = repo(path, self.data)
-
-        path = '~/workspace/prepost'
-        r = repo(path, self.data)
-        self.assertTrue(r.is_inside_work_tree())
-
-    def test_is_exists_local_branch(self):
-        path = self.path
-        data = {
-            'local': 'hoge',
-            'remote': {'branch': 'master', 'name': 'origin'},
-            'commands': ['push', 'pull']
-        }
-        with self.assertRaises(TypeError):
-            r = repo(path, data)
-
-        path = self.path
-        r = repo(path, self.data)
-        self.assertTrue(r.is_exists_local_branch())
-
     def test_is_pushed(self):
         r = repo(self.path, self.data)
         self.assertTrue(r.is_pushed())
