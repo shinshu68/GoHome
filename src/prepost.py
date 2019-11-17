@@ -34,6 +34,11 @@ def main(mode):
     # print(json.dumps(config, indent=4, sort_keys=True, separators=(',', ': ')))
     # exit()
 
+    for repo in config.get(mode).get('repo'):
+        _, _, exception = Repo.is_valid_args(repo.get('path'), repo.get('data'))
+        if exception:
+            raise exception
+
     pipe_list = []
     process_list = []
     for repo in config.get(mode).get('repo'):
