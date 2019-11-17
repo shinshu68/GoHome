@@ -22,14 +22,40 @@ def get_config_file_path():
     return config_file_path
 
 
+def left_fill_asterisk(func):
+    def wrapper(*args, **kwargs):
+        s = func(args[0], **kwargs)
+        column, _ = os.get_terminal_size()
+        asterisks = '*' * (column - len(s) - 1)
+        return s + ' ' + asterisks
+    return wrapper
+
+
+@left_fill_asterisk
+def view_play_line(config_file_path):
+    s = 'PLAY [config : ' + config_file_path + ']'
+    return s
+
+
 def repo_create_execute(repo, send_rev):
     item = Repo.repo(repo.get('path'), repo.get('data'))
     send_rev.send({'path': item.get_path(), "result": item.execute()})
 
 
+def result_show(result_list):
+    flag = True
+    for result in result_list:
+        print(result['path'])
+        for command, status in result['result'].items():
+            print(command, status)
+
+
 def main(mode):
-    with open(get_config_file_path()) as f:
+    config_file_path = get_config_file_path()
+    with open(config_file_path) as f:
         config = toml.load(f)
+
+    print(view_play_line(config_file_path))
 
     # print(json.dumps(config, indent=4, sort_keys=True, separators=(',', ': ')))
     # exit()
@@ -52,8 +78,9 @@ def main(mode):
         process.join()
 
     result_list = [x.recv() for x in pipe_list]
-    for res in result_list:
-        print(res)
+    result_show(result_list)
+    # for res in result_list:
+    #     print(res)
 
 
 if __name__ == '__main__':
