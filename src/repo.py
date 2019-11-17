@@ -4,55 +4,64 @@ import git
 import subprocess
 
 
+def is_valid_args(path, data):
+    # pathが有効かどうか
+    if not os.path.exists(str(Path(path).expanduser())):
+        return path, data, TypeError(f'"{path}" is not exists.')
+
+    # pathがgit管理のディレクトリかどうか
+    os.chdir(str(Path(path).expanduser()))
+    res = subprocess.run('git rev-parse --is-inside-work-tree',
+                         shell=True,
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE).stdout.decode('utf-8').strip()
+    if res != 'true':
+        return path, data, TypeError(f'"{path}" is not inside git work tree.')
+
+    # dataが有効かどうか
+    if 'local' not in data:
+        return path, data, TypeError('"local" not in data')
+
+    # data['local']ブランチが存在するか
+    os.chdir(str(Path(path).expanduser()))
+    res = subprocess.run(f'git rev-parse --verify {data["local"]}',
+                         shell=True,
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
+    if res.returncode != 0:
+        return path, data, TypeError(f'"local" branch({data["local"]}) is not found in {path}.')
+
+    # data['commands']が有効かどうか
+    if 'commands' not in data:
+        return path, data, TypeError('"commands" not in data.')
+
+    data['commands'] = set(data['commands'])
+    if len(data['commands']) == 0:
+        return path, data, TypeError('"commands" is empty.')
+
+    invalid_list = [command for command in data['commands'] if command not in repo.valid_commands]
+    if len(invalid_list) != 0:
+        return path, data, TypeError(f'"{invalid_list}" is not in valid_commands command.')
+
+    # data['remote']が有効かどうか
+    if 'remote' not in data:
+        return path, data, TypeError('"remote" not in data.')
+    if 'name' not in data['remote']:
+        return path, data, TypeError('"name" not in data["remote"].')
+    if 'branch' not in data['remote']:
+        return path, data, TypeError('"branch" not in data["remote"].')
+
+    return path, data, None
+
+
 class repo():
     valid_commands = ['push', 'commit', 'pull']
 
     def __init__(self, path, data):
-        # pathが有効かどうか
-        if not os.path.exists(str(Path(path).expanduser())):
-            raise TypeError(f'"{path}" is not exists.')
+        path, data, exception = is_valid_args(path, data)
 
-        # pathがgit管理のディレクトリかどうか
-        os.chdir(str(Path(path).expanduser()))
-        res = subprocess.run('git rev-parse --is-inside-work-tree',
-                             shell=True,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE).stdout.decode('utf-8').strip()
-        if res != 'true':
-            raise TypeError(f'"{path}" is not inside git work tree.')
-
-        # dataが有効かどうか
-        if 'local' not in data:
-            raise TypeError('"local" not in data')
-
-        # data['local']ブランチが存在するか
-        os.chdir(str(Path(path).expanduser()))
-        res = subprocess.run(f'git rev-parse --verify {data["local"]}',
-                             shell=True,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE)
-        if res.returncode != 0:
-            raise TypeError(f'"local" branch({data["local"]}) is not found in {path}.')
-
-        # data['commands']が有効かどうか
-        if 'commands' not in data:
-            raise TypeError('"commands" not in data.')
-
-        data['commands'] = set(data['commands'])
-        if len(data['commands']) == 0:
-            raise TypeError('"commands" is empty.')
-
-        invalid_list = [command for command in data['commands'] if command not in self.valid_commands]
-        if len(invalid_list) != 0:
-            raise TypeError(f'"{invalid_list}" is not in valid_commands command.')
-
-        # data['remote']が有効かどうか
-        if 'remote' not in data:
-            raise TypeError('"remote" not in data.')
-        if 'name' not in data['remote']:
-            raise TypeError('"name" not in data["remote"].')
-        if 'branch' not in data['remote']:
-            raise TypeError('"branch" not in data["remote"].')
+        if exception:
+            raise exception
 
         self._path = path
         self._data = data
