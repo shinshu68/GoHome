@@ -43,6 +43,29 @@ def view_task_line(task):
     return s
 
 
+def view_repo_line(data, command, status):
+    red = '\x1b[0;31m'
+    green = '\x1b[0;32m'
+    reset = '\x1b[0;39m'
+    local = data['local']
+    remote = {
+        data['remote']['name'],
+        data['remote']['branch']
+    }
+
+    s = ''
+    if status:
+        s = f'{green}ok: '
+    else:
+        s = f'{red}fatal: '
+
+    s = s + f'[{command}] => (item="local": {local}, "remote":{remote})'
+
+    s = s + reset
+
+    return s
+
+
 def repo_create_execute(repo, send_rev):
     path = repo.get('path')
     data = repo.get('data')
@@ -66,9 +89,11 @@ def result_show(result_list):
     flag = True
     for result in result_list:
         print(view_task_line(result))
+        # print(view_repo_line(result))
         # print(result['path'])
         for command, status in result['result'].items():
-            print(command, status)
+            print(view_repo_line(result['data'], command, status))
+            # print(command, status)
         print()
 
 
