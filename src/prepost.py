@@ -37,6 +37,12 @@ def view_play_line(config_file_path):
     return s
 
 
+@left_fill_asterisk
+def view_task_line(task):
+    s = f'TASK [{task["kind"]} : {task["path"]}]'
+    return s
+
+
 def repo_create_execute(repo, send_rev):
     item = Repo.repo(repo.get('path'), repo.get('data'))
     send_rev.send({'kind': 'repo', 'path': item.get_path(), "result": item.execute()})
@@ -45,9 +51,11 @@ def repo_create_execute(repo, send_rev):
 def result_show(result_list):
     flag = True
     for result in result_list:
-        print(result['path'])
+        print(view_task_line(result))
+        # print(result['path'])
         for command, status in result['result'].items():
             print(command, status)
+        print()
 
 
 def main(mode):
@@ -56,6 +64,7 @@ def main(mode):
         config = toml.load(f)
 
     print(view_play_line(config_file_path))
+    print()
 
     # print(json.dumps(config, indent=4, sort_keys=True, separators=(',', ': ')))
     # exit()
