@@ -33,7 +33,7 @@ def left_fill_asterisk(func):
 
 @left_fill_asterisk
 def view_play_line(config_file_path):
-    s = 'PLAY [config : ' + config_file_path + ']'
+    s = f'PLAY [config : {config_file_path}]'
     return s
 
 
