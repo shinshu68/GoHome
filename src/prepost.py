@@ -131,9 +131,9 @@ def result_show(mode, result_list):
     s = s + set_green(f'ok={ok_count}')
     s = color_reset(s) + '    '
     if fail_count != 0:
-        s = s + set_red(f'fail={fail_count}')
+        s = s + set_red(f'failed={fail_count}')
     else:
-        s = s + 'fail=0'
+        s = s + 'failed=0'
     print(s)
 
 
