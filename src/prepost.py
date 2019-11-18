@@ -77,11 +77,14 @@ def view_repo_line(data, command, status):
 
     s = ''
     if status:
-        s = set_green('ok: ')
+        s = set_green('   ok: ')
     else:
         s = set_red('fatal: ')
 
-    s = s + f'[{command}] => (item="local": {local}, "remote":{remote})'
+    if command != 'commit':
+        s = s + f'[ {command} ] => (item="local": {local}, "remote":{remote})'
+    else:
+        s = s + f'[{command}] => (item="local": {local}, "remote":{remote})'
 
     s = color_reset(s)
 
