@@ -107,16 +107,31 @@ def repo_create_execute(repo, send_rev):
     })
 
 
-def result_show(result_list):
-    flag = True
+def result_show(mode, result_list):
+    ok_count = 0
+    fail_count = 0
     for result in result_list:
         print(view_task_line(result))
         # print(view_repo_line(result))
         # print(result['path'])
         for command, status in result['result'].items():
             print(view_repo_line(result['data'], command, status))
+            if status:
+                ok_count = ok_count + 1
+            else:
+                fail_count = fail_count + 1
             # print(command, status)
         print()
+
+    print(view_recap_line())
+
+    s = set_green(mode) if fail_count == 0 else set_red(mode)
+    s = color_reset(s)
+    s = s + '                  : '
+    s = s + set_green(f'ok={ok_count}')
+    s = color_reset(s) + '    '
+    s = s + set_red(f'fail={fail_count}')
+    print(s)
 
 
 def main(mode):
@@ -148,7 +163,7 @@ def main(mode):
         process.join()
 
     result_list = [x.recv() for x in pipe_list]
-    result_show(result_list)
+    result_show(mode, result_list)
     # for res in result_list:
     #     print(res)
 
