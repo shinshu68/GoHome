@@ -24,7 +24,11 @@ def get_config_file_path():
 
 def left_fill_asterisk(func):
     def wrapper(*args, **kwargs):
-        s = func(args[0], **kwargs)
+        s = ''
+        if len(args) != 0:
+            s = func(args[0], **kwargs)
+        else:
+            s = func(*args, **kwargs)
         column, _ = os.get_terminal_size()
         asterisks = '*' * (column - len(s) - 1)
         return s + ' ' + asterisks
@@ -40,6 +44,12 @@ def view_play_line(config_file_path):
 @left_fill_asterisk
 def view_task_line(task):
     s = f'TASK [{task["kind"]} : {task["path"]}]'
+    return s
+
+
+@left_fill_asterisk
+def view_recap_line():
+    s = 'PLAY RECAP'
     return s
 
 
