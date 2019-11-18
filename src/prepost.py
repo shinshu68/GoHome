@@ -43,10 +43,22 @@ def view_task_line(task):
     return s
 
 
-def view_repo_line(data, command, status):
-    red = '\x1b[0;31m'
+def set_green(s):
     green = '\x1b[0;32m'
+    return green + s
+
+
+def set_red(s):
+    red = '\x1b[0;31m'
+    return red + s
+
+
+def color_reset(s):
     reset = '\x1b[0;39m'
+    return s + reset
+
+
+def view_repo_line(data, command, status):
     local = data['local']
     remote = {
         data['remote']['name'],
@@ -55,13 +67,13 @@ def view_repo_line(data, command, status):
 
     s = ''
     if status:
-        s = f'{green}ok: '
+        s = set_green('ok: ')
     else:
-        s = f'{red}fatal: '
+        s = set_red('fatal: ')
 
     s = s + f'[{command}] => (item="local": {local}, "remote":{remote})'
 
-    s = s + reset
+    s = color_reset(s)
 
     return s
 
