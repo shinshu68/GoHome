@@ -45,7 +45,7 @@ def view_task_line(task):
 
 def repo_create_execute(repo, send_rev):
     item = Repo.repo(repo.get('path'), repo.get('data'))
-    send_rev.send({'kind': 'repo', 'path': item.get_path(), "result": item.execute()})
+    send_rev.send({'kind': 'repo', 'path': item.get_path(), 'data': item.get_data(), 'result': item.execute()})
 
 
 def result_show(result_list):
