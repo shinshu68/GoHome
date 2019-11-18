@@ -54,8 +54,8 @@ def repo_create_execute(repo, send_rev):
             'commands': data['commands'],
             'local': data['local'],
             'remote': {
-                data['remote']['name'],
-                data['remote']['branch']
+                'name': data['remote']['name'],
+                'branch': data['remote']['branch']
             }
         },
         'result': item.execute()
