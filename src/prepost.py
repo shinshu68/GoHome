@@ -154,6 +154,7 @@ def main(mode):
     # print(json.dumps(config, indent=4, sort_keys=True, separators=(',', ': ')))
     # exit()
 
+    # 先に設定ファイルの内容に問題がないかチェックする
     for repo in config.get(mode).get('repo'):
         _, _, exception = Repo.is_valid_args(repo.get('path'), repo.get('data'))
         if exception:
