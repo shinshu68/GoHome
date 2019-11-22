@@ -155,10 +155,14 @@ def main(mode):
     # exit()
 
     # 先に設定ファイルの内容に問題がないかチェックする
-    for repo in config.get(mode).get('repo'):
+    repos = config.get(mode).get('repo')
+    for repo in repos:
         _, _, exception = Repo.is_valid_args(repo.get('path'), repo.get('data'))
         if exception:
-            raise exception
+            if repo.get('optional'):
+                config[mode]['repo'].remove(repo)
+            else:
+                raise exception
 
     pipe_list = []
     process_list = []
