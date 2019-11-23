@@ -1,5 +1,6 @@
 import os
 import unittest
+from src.repo import is_valid_args
 from src.repo import repo
 
 
@@ -50,13 +51,18 @@ class TestRepo(unittest.TestCase):
         with self.assertRaises(TypeError):
             r = repo(data=self.data)
 
-        for data in self.bad_data:
-            with self.assertRaises(TypeError):
-                r = repo(path=self.path, data=data)
-
         r = repo(path=self.path, data=self.data)
         self.assertEqual(r._path, self.path)
         self.assertEqual(r._data, self.data)
+
+    def test_is_valid_args(self):
+        for path in ["", "~/"]:
+            _, _, exception = is_valid_args(path=path, data=self.data)
+            self.assertIsNotNone(exception)
+
+        for data in self.bad_data:
+            _, _, exception = is_valid_args(path=self.path, data=data)
+            self.assertIsNotNone(exception)
 
     def test_repo_str(self):
         r = repo(self.path, self.data)
