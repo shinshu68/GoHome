@@ -19,8 +19,8 @@ class TestRepo(unittest.TestCase):
                 'commands': ['push', 'pull']
             },
             {
-                # 'local': 'master',
-                'remote': {'branch': 'master', 'name': 'origin'},
+                'local': 'master',
+                # 'remote': {'branch': 'master', 'name': 'origin'},
                 'commands': ['push', 'pull']
             },
             {
