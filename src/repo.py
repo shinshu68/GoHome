@@ -6,6 +6,9 @@ import subprocess
 
 def is_valid_args(path, data):
     # pathが有効かどうか
+    if path == "":
+        return path, data, TypeError(f'"{path}" is empty.')
+
     if not os.path.exists(str(Path(path).expanduser())):
         return path, data, TypeError(f'"{path}" is not exists.')
 
